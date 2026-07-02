@@ -89,6 +89,11 @@ export default async function ServiciosPage() {
             </p>
           </Reveal>
 
+          <Reveal className="relative mx-auto mt-10 h-52 max-w-4xl overflow-hidden rounded-3xl sm:h-64">
+            <Image src="/photos/spa-ritual.jpg" alt="Ritual SPA capilar en Alma Rizo" fill sizes="(min-width:768px) 56rem, 100vw" className="object-cover object-center" />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-deep/50 to-transparent" />
+          </Reveal>
+
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {rituals.map((r, i) => (
               <Reveal key={r.name} delay={(i % 3) * 80}>

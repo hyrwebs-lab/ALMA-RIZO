@@ -254,14 +254,17 @@ export const reviews: Review[] = [
 
 /* Resultados / galería — fotos reales del salón. */
 export const gallery: { src: string; alt: string; real?: boolean }[] = [
-  { src: "/photos/real-portrait.jpg", alt: "Rizo afro definido — resultado Alma Rizo", real: true },
-  { src: "/photos/real-despues-rizo.jpg", alt: "Corte y color rizo, resultado definido", real: true },
-  { src: "/photos/real-definicion.jpg", alt: "Definición del rizo con difusor", real: true },
-  { src: "/photos/real-diagnostico.jpg", alt: "Diagnóstico capilar personalizado", real: true },
+  { src: "/photos/curly-portrait-color.jpg", alt: "Rizo definido, resultado Alma Rizo", real: true },
+  { src: "/photos/curly-color-bride.jpg", alt: "Definición y luz en el rizo", real: true },
+  { src: "/photos/curly-editorial-1.jpg", alt: "Melena rizada, editorial", real: true },
+  { src: "/photos/curly-back.jpg", alt: "Definición del rizo", real: true },
+  { src: "/photos/curly-editorial-2.jpg", alt: "Rizo natural definido", real: true },
+  { src: "/photos/curly-hombre.jpg", alt: "Corte curly masculino", real: true },
+  { src: "/photos/curly-kids.jpg", alt: "Método Alma Rizo Kids", real: true },
+  { src: "/photos/curly-silhouette.jpg", alt: "Rizo con movimiento", real: true },
+  { src: "/photos/spa-ritual.jpg", alt: "Ritual SPA capilar", real: true },
+  { src: "/photos/products-ritual.jpg", alt: "Cuidado del rizo en casa", real: true },
   { src: "/photos/real-salon.jpg", alt: "Nuestro salón en Tarragona", real: true },
-  { src: "/photos/real-elasticidad.jpg", alt: "Test de elasticidad del rizo", real: true },
-  { src: "/photos/real-proteina.jpg", alt: "Tratamiento de proteína", real: true },
-  { src: "/photos/real-antes-rizo.jpg", alt: "Melena rizada antes del trabajo", real: true },
 ];
 
 /* Antes / Después — transformaciones reales del salón. */
