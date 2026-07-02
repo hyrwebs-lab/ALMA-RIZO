@@ -68,28 +68,29 @@ export type Service = {
   image?: string;
 };
 
-/* Los 3 servicios destacados que pidió la dueña + catálogo para reservas.
-   PRECIOS Y DURACIONES SON DE EJEMPLO — pendientes de confirmar. */
+/* Servicios reales (Carta de Servicio Alma Rizo). El precio mostrado es el de
+   referencia; las duraciones son orientativas y la dueña puede ajustar el tiempo
+   de cada reserva. En coloración/moldeado el presupuesto se cierra tras diagnóstico. */
 export const services: Service[] = [
   {
     slug: "metodo-alma-rizo",
     name: "Método Alma Rizo",
-    tagline: "Transformación completa del rizo",
+    tagline: "Servicio completo curly",
     description:
-      "Nuestra experiencia estrella: diagnóstico, corte en seco, definición personalizada y asesoría para que sepas mantener el resultado en casa.",
+      "Servicio completo para entender y transformar tu rizo: corte, tratamiento profundo, definición profesional y asesoramiento personalizado. Duración orientativa 90-120 min.",
     durationMin: 120,
-    price: 75,
+    price: 95,
     featured: true,
     image: "/photos/real-diagnostico.jpg",
   },
   {
     slug: "corte-curly",
     name: "Corte Curly",
-    tagline: "Mantenimiento y forma",
+    tagline: "Corte de mantenimiento",
     description:
-      "Corte en seco rizo a rizo que respeta tu patrón natural, controla el volumen y devuelve la forma a tu melena.",
-    durationMin: 75,
-    price: 45,
+      "Corte adaptado a tu tipo de rizo para mantener forma, movimiento y equilibrio. Duración orientativa 40-60 min.",
+    durationMin: 60,
+    price: 60,
     featured: true,
     image: "/photos/real-definicion.jpg",
   },
@@ -98,31 +99,108 @@ export const services: Service[] = [
     name: "Ritual Alma Rizo",
     tagline: "Tratamiento y definición",
     description:
-      "Hidratación profunda y definición a medida para rizos sanos, luminosos y duraderos.",
-    durationMin: 90,
+      "Tratamiento profundo y definición rizo a rizo para recuperar hidratación, controlar el encrespamiento y potenciar la forma natural del rizo. Duración orientativa 60-75 min.",
+    durationMin: 75,
     price: 60,
     featured: true,
     image: "/photos/real-proteina.jpg",
   },
   {
-    slug: "diagnostico",
-    name: "Diagnóstico capilar",
-    tagline: "Primera visita y asesoramiento",
+    slug: "curly-hombre",
+    name: "Curly Hombre",
+    tagline: "Rizo masculino · 35-45€",
     description:
-      "Analizamos tu tipo de rizo, su estado y tus necesidades reales para diseñar un plan a tu medida.",
-    durationMin: 45,
-    price: 25,
+      "Corte adaptado al rizo masculino para mantener forma, definición y facilidad en el día a día. Duración orientativa 30-40 min.",
+    durationMin: 40,
+    price: 45,
     image: "/photos/real-elasticidad.jpg",
   },
   {
-    slug: "hidratacion-profunda",
-    name: "Hidratación profunda",
-    tagline: "Nutrición intensiva",
+    slug: "metodo-alma-rizo-kids",
+    name: "Método Alma Rizo Kids",
+    tagline: "Para los más peques",
     description:
-      "Tratamiento intensivo que repara, nutre y devuelve elasticidad al rizo deshidratado.",
-    durationMin: 60,
-    price: 40,
-    image: "/photos/real-proteina.jpg",
+      "Experiencia adaptada para que aprendan a cuidar y definir su rizo respetando su textura natural. Incluye corte, lavado y definición de rizos. Duración orientativa 50-70 min.",
+    durationMin: 70,
+    price: 70,
+    image: "/photos/real-portrait.jpg",
+  },
+  {
+    slug: "iluminacion-curlyage",
+    name: "Iluminación CurlyAge",
+    tagline: "Coloración curly · desde 100€",
+    description:
+      "Técnica de coloración diseñada específicamente para cabello rizado: aporta luz, dimensión y movimiento sin comprometer la salud de la fibra, respetando tu patrón de rizo. El presupuesto se define tras un diagnóstico personalizado.",
+    durationMin: 210,
+    price: 100,
+    image: "/photos/real-despues-rizo.jpg",
+  },
+  {
+    slug: "moldeado-inteligente",
+    name: "Moldeado Inteligente",
+    tagline: "Transformación permanente · desde 100€",
+    description:
+      "Transformación permanente que adapta la técnica a tu cabello para crear ondas suaves, rizos con nervio o afro, con más volumen y una definición duradera. Fórmulas orgánicas y sin amoníaco. Presupuesto tras diagnóstico.",
+    durationMin: 180,
+    price: 100,
+    image: "/photos/real-salon.jpg",
+  },
+];
+
+/* Rituales · SPA Capilar (tratamientos, se pueden añadir a un servicio). Cada
+   uno tiene niveles según intensidad/duración. Info real de la carta de rituales. */
+export const rituals: { name: string; vegan?: boolean; description: string; ideal: string; tiers: { label: string; time: string; price: string }[] }[] = [
+  {
+    name: "Nutrición Ricca",
+    description: "Devuelve el equilibrio nutricional al cabello seco o deshidratado; rehidrata medios y puntas y aporta brillo natural.",
+    ideal: "Cabello seco, deshidratado, teñido o apagado.",
+    tiers: [
+      { label: "Express", time: "10-15 min", price: "18€" },
+      { label: "Sublime", time: "20-25 min", price: "35€" },
+      { label: "Premium", time: "35-40 min", price: "45€" },
+    ],
+  },
+  {
+    name: "Disciplina · Antifrizz",
+    description: "Domina y suaviza la fibra para controlar el frizz, reducir el encrespamiento y proteger de la humedad.",
+    ideal: "Cabello encrespado, poroso, grueso o rebelde; clima húmedo.",
+    tiers: [
+      { label: "Express", time: "10-15 min", price: "18€" },
+      { label: "Sublime", time: "20-25 min", price: "35€" },
+      { label: "Premium", time: "35-40 min", price: "45€" },
+    ],
+  },
+  {
+    name: "Protein Therapy",
+    description: "Reconstruye y refuerza la fibra capilar desde el interior, mejorando resistencia y aportando cuerpo.",
+    ideal: "Cabello decolorado, dañado por calor, quebradizo o debilitado.",
+    tiers: [
+      { label: "Express", time: "10-15 min", price: "18€" },
+      { label: "Sublime", time: "20-25 min", price: "35€" },
+      { label: "Premium", time: "35-45 min", price: "45€" },
+    ],
+  },
+  {
+    name: "Volufill · Bótox voluminizador",
+    vegan: true,
+    description: "Regenera la fibra y mejora su cohesión: rellena zonas debilitadas, compacta la cutícula y aporta densidad y brillo. 100% vegano.",
+    ideal: "Cabello muy dañado, envejecido, muy poroso o tratado químicamente.",
+    tiers: [
+      { label: "Express", time: "10-15 min", price: "18€" },
+      { label: "Premium", time: "35-40 min", price: "45€" },
+    ],
+  },
+  {
+    name: "Illaminaction · Efecto espejo",
+    description: "Ritual de laminado que sella la cutícula y equilibra el pH, dejando la fibra más compacta, brillante y protegida. Brillo espejo.",
+    ideal: "Cabello teñido, apagado, poroso, encrespado o tras decoloración.",
+    tiers: [{ label: "Ritual", time: "30-35 min", price: "45€" }],
+  },
+  {
+    name: "Exfoliación Capilar",
+    description: "Limpieza profunda del cuero cabelludo: elimina células muertas e impurezas y desobstruye los poros, evitando exceso de grasa y caspa.",
+    ideal: "Mantenimiento de un cuero cabelludo sano.",
+    tiers: [{ label: "Ritual", time: "15 min", price: "10€" }],
   },
 ];
 
