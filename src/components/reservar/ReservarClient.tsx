@@ -132,7 +132,7 @@ export default function ReservarClient() {
           Hemos registrado tu solicitud. Te confirmaremos la cita por WhatsApp lo antes posible.
         </p>
 
-        <div className="mt-8 border border-brand/10 bg-cream-soft p-6 text-left">
+        <div className="mt-8 rounded-2xl border border-brand/10 bg-cream-soft p-6 text-left">
           <Row k="Servicio" v={service?.name ?? ""} />
           <Row k="Estilista" v={workerName} />
           <Row k="Fecha" v={prettyDate(date)} />
@@ -141,7 +141,7 @@ export default function ReservarClient() {
         </div>
 
         {/* Vídeo "cómo venir preparada" */}
-        <div className="mt-8 border border-gold/40 bg-cream p-6 text-left">
+        <div className="mt-8 rounded-2xl border border-gold/40 bg-cream p-6 text-left">
           <p className="eyebrow text-gold">Antes de tu cita</p>
           <h2 className="mt-2 font-display text-2xl text-brand">Cómo venir preparada</h2>
           <p className="mt-2 text-sm text-ink-soft">
@@ -152,7 +152,7 @@ export default function ReservarClient() {
               <Button variant="solid" size="sm">Ver el vídeo</Button>
             </a>
           ) : (
-            <div className="mt-4 flex aspect-video items-center justify-center border border-dashed border-brand/30 bg-cream-soft text-center text-xs text-ink-soft/70">
+            <div className="mt-4 flex aspect-video items-center justify-center rounded-lg border border-dashed border-brand/30 bg-cream-soft text-center text-xs text-ink-soft/70">
               ▶ Vídeo pendiente de recibir
             </div>
           )}
@@ -188,7 +188,7 @@ export default function ReservarClient() {
         ))}
       </ol>
 
-      <div className="min-h-[320px]">
+      <div className="min-h-[320px] rounded-3xl border border-brand/10 bg-white/60 p-6 shadow-[0_1px_0_0_rgba(200,168,104,0.25)] sm:p-8">
         {/* STEP 1: Servicio */}
         {step === 0 && (
           <div>
@@ -198,7 +198,7 @@ export default function ReservarClient() {
                 <button
                   key={s.slug}
                   onClick={() => setServiceSlug(s.slug)}
-                  className={`flex flex-col items-start border p-5 text-left transition-all ${
+                  className={`flex flex-col items-start rounded-2xl border p-5 text-left transition-all ${
                     serviceSlug === s.slug ? "border-gold bg-gold/5 ring-1 ring-gold" : "border-brand/15 hover:border-brand/40"
                   }`}
                 >
@@ -241,7 +241,7 @@ export default function ReservarClient() {
                   <button
                     key={ds}
                     onClick={() => { setDate(ds); setTime(""); }}
-                    className={`flex shrink-0 flex-col items-center rounded-md border px-4 py-3 transition-all ${
+                    className={`flex shrink-0 flex-col items-center rounded-xl border px-4 py-3 transition-all ${
                       sel ? "border-gold bg-brand text-cream" : "border-brand/15 hover:border-brand/40"
                     }`}
                   >
@@ -266,7 +266,7 @@ export default function ReservarClient() {
                       <button
                         key={t}
                         onClick={() => setTime(t)}
-                        className={`border py-2 text-sm transition-all ${
+                        className={`rounded-lg border py-2 text-sm transition-all ${
                           time === t ? "border-gold bg-gold/10 text-brand" : "border-brand/15 hover:border-brand/40"
                         }`}
                       >
@@ -307,7 +307,7 @@ export default function ReservarClient() {
         {step === 4 && service && (
           <div>
             <h2 className="font-display text-3xl text-brand">Revisa y confirma</h2>
-            <div className="mt-6 border border-brand/10 bg-cream-soft p-6">
+            <div className="mt-6 rounded-2xl border border-brand/10 bg-cream-soft p-6">
               <Row k="Servicio" v={`${service.name} · ${formatDuration(service.durationMin)}`} />
               <Row k="Precio" v={formatPrice(service.price)} />
               <Row k="Estilista" v={workerName} />
@@ -348,7 +348,7 @@ export default function ReservarClient() {
 }
 
 const inputCls =
-  "w-full border border-brand/20 bg-cream-soft px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-gold";
+  "w-full rounded-lg border border-brand/20 bg-cream-soft px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-gold";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -363,7 +363,7 @@ function ChoiceCard({ active, onClick, title, subtitle }: { active: boolean; onC
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-start border p-5 text-left transition-all ${
+      className={`flex flex-col items-start rounded-2xl border p-5 text-left transition-all ${
         active ? "border-gold bg-gold/5 ring-1 ring-gold" : "border-brand/15 hover:border-brand/40"
       }`}
     >
