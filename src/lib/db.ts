@@ -40,6 +40,16 @@ async function ready(): Promise<Client> {
 async function q(sql: string, args: InArgs = []) {
   return (await ready()).execute({ sql, args });
 }
+// Devuelve filas como objetos PLANOS (los Row de libSQL llevan métodos y no se
+// pueden pasar del servidor a componentes cliente en React).
+async function rows(sql: string, args: InArgs = []): Promise<Row[]> {
+  const rs = await (await ready()).execute({ sql, args });
+  return rs.rows.map((r) => {
+    const o: Row = {};
+    for (const c of rs.columns) o[c] = (r as unknown as Record<string, unknown>)[c];
+    return o;
+  });
+}
 
 /* ---------- helpers ---------- */
 function pad(n: number) {
@@ -163,13 +173,13 @@ export async function createReservation(input: NewReservation, opts?: { status?:
 }
 
 /* ---------- reads ---------- */
-export const allReservations = async () => (await q("SELECT * FROM reservations ORDER BY date, time")).rows as Row[];
-export const allServices = async () => (await q("SELECT * FROM services ORDER BY sort")).rows as Row[];
-export const allWorkers = async () => (await q("SELECT * FROM workers ORDER BY sort")).rows as Row[];
-export const allReviews = async () => (await q("SELECT * FROM reviews ORDER BY sort")).rows as Row[];
-export const allProducts = async () => (await q("SELECT * FROM products ORDER BY sort")).rows as Row[];
-export const allNews = async () => (await q("SELECT * FROM news ORDER BY sort")).rows as Row[];
-export const allMessages = async () => (await q("SELECT * FROM messages ORDER BY createdAt DESC")).rows as Row[];
+export const allReservations = async () => rows("SELECT * FROM reservations ORDER BY date, time");
+export const allServices = async () => rows("SELECT * FROM services ORDER BY sort");
+export const allWorkers = async () => rows("SELECT * FROM workers ORDER BY sort");
+export const allReviews = async () => rows("SELECT * FROM reviews ORDER BY sort");
+export const allProducts = async () => rows("SELECT * FROM products ORDER BY sort");
+export const allNews = async () => rows("SELECT * FROM news ORDER BY sort");
+export const allMessages = async () => rows("SELECT * FROM messages ORDER BY createdAt DESC");
 export async function getSetting(key: string) {
   const r = (await q("SELECT value FROM settings WHERE key = ?", [key])).rows[0] as unknown as { value: string } | undefined;
   return r ? JSON.parse(r.value) : null;
