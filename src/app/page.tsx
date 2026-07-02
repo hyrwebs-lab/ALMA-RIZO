@@ -22,22 +22,43 @@ export default async function Home() {
     getNews(),
   ]);
 
+  const shownReviews = reviews.filter((r) => r.rating >= 4.5);
+  const avgRating = shownReviews.length
+    ? shownReviews.reduce((a, r) => a + r.rating, 0) / shownReviews.length
+    : 5;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "HairSalon",
+    "@id": "https://almarizo.com/#salon",
     name: site.fullName,
     description: site.tagline,
+    image: "https://almarizo.com/og.jpg",
+    logo: "https://almarizo.com/logos/logo-green.png",
     address: {
       "@type": "PostalAddress",
       streetAddress: site.contact.address,
       postalCode: site.contact.postalCode,
       addressLocality: site.contact.cityRegion,
+      addressRegion: "Tarragona",
       addressCountry: "ES",
     },
-    telephone: site.contact.phone,
+    geo: { "@type": "GeoCoordinates", latitude: 41.118, longitude: 1.245 },
+    telephone: site.contact.phoneHref,
     url: "https://almarizo.com",
     areaServed: "Tarragona",
     priceRange: "€€",
+    currenciesAccepted: "EUR",
+    sameAs: [site.social.instagram],
+    hasMap: site.mapsLink,
+    openingHoursSpecification: [
+      { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday"], opens: "09:30", closes: "18:30" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: ["Thursday", "Friday"], opens: "09:30", closes: "19:30" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "09:30", closes: "13:30" },
+    ],
+    ...(shownReviews.length
+      ? { aggregateRating: { "@type": "AggregateRating", ratingValue: avgRating.toFixed(1), reviewCount: shownReviews.length, bestRating: 5 } }
+      : {}),
   };
 
   return (

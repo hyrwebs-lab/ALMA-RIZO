@@ -41,12 +41,33 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_ES",
+    url: "https://almarizo.com",
     title: "Alma Rizo · Especialistas en cabello rizado en Tarragona",
     description:
-      "Corte en seco, diagnóstico y definición personalizada para tu rizo. Reserva tu cita en Tarragona.",
+      "Corte, diagnóstico y definición personalizada para tu rizo. Reserva tu cita en Tarragona.",
     siteName: "Alma Rizo",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Alma Rizo · Curly Studio by MariCruz" }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Alma Rizo · Peluquería curly en Tarragona",
+    description: "Especialistas en cabello rizado. Reserva tu cita en Tarragona.",
+    images: ["/og.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  formatDetection: { telephone: true, address: true },
   alternates: { canonical: "/" },
+  // GEO / SEO local — Tarragona
+  other: {
+    "geo.region": "ES-T",
+    "geo.placename": "Tarragona",
+    "geo.position": "41.118;1.245",
+    ICBM: "41.118, 1.245",
+  },
 };
 
 export default function RootLayout({

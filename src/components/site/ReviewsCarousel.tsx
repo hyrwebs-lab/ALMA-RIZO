@@ -17,6 +17,8 @@ function initials(name: string) {
 export default function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const activeRef = useRef(0);
+  const [paused, setPaused] = useState(false);
 
   const scrollToCard = (i: number) => {
     const track = trackRef.current;
@@ -46,14 +48,29 @@ export default function ReviewsCarousel({ reviews }: { reviews: Review[] }) {
           closest = i;
         }
       });
+      activeRef.current = closest;
       setActive(closest);
     };
     track.addEventListener("scroll", onScroll, { passive: true });
     return () => track.removeEventListener("scroll", onScroll);
   }, [reviews.length]);
 
+  // Auto-avance: pasa solo cada 5s; se pausa al interactuar (ratón/toque).
+  useEffect(() => {
+    if (paused || reviews.length <= 1) return;
+    const timer = setInterval(() => {
+      scrollToCard((activeRef.current + 1) % reviews.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [paused, reviews.length]);
+
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+    >
       {/* Track */}
       <div
         ref={trackRef}
