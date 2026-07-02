@@ -123,40 +123,50 @@ function Novedades({ news }: { news: News[] }) {
   return (
     <>
       <div className="absolute inset-0 bg-gradient-to-br from-brand via-brand-deep to-brand" />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(55% 50% at 25% 28%, rgba(200,168,104,0.18), transparent 70%)" }} />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(58% 55% at 20% 32%, rgba(200,168,104,0.20), transparent 70%)" }} />
+      <svg aria-hidden viewBox="0 0 600 600" className="pointer-events-none absolute -right-40 top-1/2 hidden h-[135%] -translate-y-1/2 text-gold/[0.06] lg:block" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M120 40c80 30 60 110-10 120s-90 80-10 110 110 60 40 130" />
+        <path d="M300 0c90 50 50 130-30 140s-70 90 20 120 90 80 10 150" />
+        <path d="M470 30c70 40 50 120-20 135s-60 95 25 125 80 75 5 150" />
+      </svg>
+
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24 sm:px-8">
-        <div className="mb-9 flex items-center justify-center gap-4">
-          <span className="h-px w-10 bg-gold/45" />
-          <p className="eyebrow flex items-center gap-2 text-gold"><Sparkle className="h-3.5 w-3.5" /> {t.hero.novedadesTitle}</p>
-          <span className="h-px w-10 bg-gold/45" />
+        <div className="mb-8 flex items-center gap-4 sm:mb-10">
+          <span className="eyebrow flex items-center gap-2 whitespace-nowrap text-gold"><Sparkle className="h-3.5 w-3.5" /> {t.hero.novedadesTitle}</span>
+          <span className="h-px flex-1 bg-gradient-to-r from-gold/50 to-transparent" />
         </div>
-        <div className="grid gap-6 md:grid-cols-[1.12fr_0.88fr] md:items-stretch">
+
+        <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+          {/* Destacado — titular editorial grande */}
           {featured && (
-            <article className="relative flex flex-col justify-center overflow-hidden rounded-3xl border border-gold/25 bg-gradient-to-br from-cream-soft/[0.08] to-cream-soft/[0.02] p-8 backdrop-blur-sm md:p-11">
-              <span className="pointer-events-none absolute -right-10 -top-10 text-gold/10"><Sparkle className="h-40 w-40" /></span>
-              <span className="relative inline-flex w-fit items-center gap-2 rounded-full bg-gold/20 px-3.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.18em] text-gold-soft">
-                <Sparkle /> {featured.tag}
-              </span>
-              <h2 className="relative mt-5 font-display text-3xl leading-[1.08] sm:text-4xl md:text-[2.6rem]">{featured.title}</h2>
-              <p className="relative mt-4 max-w-md leading-relaxed text-cream/80">{featured.text}</p>
-              <div className="relative mt-8 flex flex-wrap gap-3">
+            <div className="relative border-l-2 border-gold/60 pl-6 sm:pl-8">
+              <span className="text-[0.62rem] font-medium uppercase tracking-[0.25em] text-gold-soft">{featured.tag}</span>
+              <h2 className="mt-3 font-display leading-[1.03] text-[2.1rem] sm:text-5xl md:text-6xl">{featured.title}</h2>
+              <p className="mt-5 max-w-lg text-base leading-relaxed text-cream/80 line-clamp-3 sm:text-lg">{featured.text}</p>
+              <div className="mt-8 flex flex-wrap gap-3">
                 <ButtonLink href="/reservar" variant="gold" size="md">{t.cta.reservarAhora}</ButtonLink>
                 <ButtonLink href="/productos" variant="outlineLight" size="md">{t.cta.verProductos}</ButtonLink>
               </div>
-            </article>
+            </div>
           )}
-          <div className="flex flex-col gap-4">
-            {rest.map((n, idx) => (
-              <article key={n.title} className="group flex flex-1 items-start gap-4 rounded-2xl border border-cream/12 bg-cream-soft/[0.04] p-5 transition-all duration-300 hover:border-gold/40 hover:bg-cream-soft/[0.07] sm:p-6">
-                <span className="font-display text-3xl leading-none text-gold/50 transition-colors group-hover:text-gold/80">0{idx + 2}</span>
-                <div className="min-w-0">
-                  <span className="text-[0.6rem] font-medium uppercase tracking-[0.18em] text-gold">{n.tag}</span>
-                  <h3 className="mt-1 font-display text-xl leading-snug">{n.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-cream/70">{n.text}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+
+          {/* Secundarias — panel elegante con índice */}
+          {rest.length > 0 && (
+            <div className="rounded-3xl border border-cream/12 bg-gradient-to-b from-cream-soft/[0.09] to-cream-soft/[0.02] p-6 backdrop-blur-sm sm:p-8">
+              <ul className="divide-y divide-cream/10">
+                {rest.map((n, idx) => (
+                  <li key={n.title} className="group flex gap-4 py-4 first:pt-0 last:pb-0">
+                    <span className="font-display text-2xl leading-none text-gold/55 transition-colors group-hover:text-gold">0{idx + 2}</span>
+                    <div className="min-w-0">
+                      <span className="text-[0.58rem] font-medium uppercase tracking-[0.2em] text-gold">{n.tag}</span>
+                      <h3 className="mt-1 font-display text-lg leading-snug text-cream">{n.title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-cream/65 line-clamp-2">{n.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </>
