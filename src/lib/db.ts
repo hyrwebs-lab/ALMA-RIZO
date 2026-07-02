@@ -120,12 +120,16 @@ export async function slotsForDate(dateStr: string, workerId: string, durationMi
 
 export type NewReservation = { serviceSlug: string; workerId: string; date: string; time: string; name: string; phone: string; email: string; notes: string };
 
-export async function createReservation(input: NewReservation, opts?: { status?: ReservationStatus }) {
+export async function createReservation(input: NewReservation, opts?: { status?: ReservationStatus; force?: boolean }) {
   const svc = (await q("SELECT name, price, durationMin FROM services WHERE slug = ?", [input.serviceSlug])).rows[0] as unknown as { name: string; price: number; durationMin: number } | undefined;
   if (!svc) throw new Error("Servicio no válido");
 
-  const avail = await slotsForDate(input.date, input.workerId, svc.durationMin);
-  if (!avail.includes(input.time)) throw new Error("Esa hora ya no está disponible");
+  // `force` (solo admin) permite citas fuera de horario; el bloqueo de doble
+  // reserva se mantiene siempre gracias al índice UNIQUE y a `takenAt`.
+  if (!opts?.force) {
+    const avail = await slotsForDate(input.date, input.workerId, svc.durationMin);
+    if (!avail.includes(input.time)) throw new Error("Esa hora ya no está disponible");
+  }
 
   const active = (await q("SELECT id, name FROM workers WHERE active = 1")).rows as unknown as { id: string; name: string }[];
   const takenAt = new Set((await q("SELECT workerId FROM reservations WHERE date = ? AND time = ? AND status != 'cancelada'", [input.date, input.time])).rows.map((r) => (r as unknown as { workerId: string }).workerId));

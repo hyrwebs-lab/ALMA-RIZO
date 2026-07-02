@@ -97,10 +97,10 @@ export async function adminDeleteReservationAction(id: string) {
   await db.deleteReservation(id);
   return { ok: true as const };
 }
-export async function adminCreateReservationAction(input: db.NewReservation) {
+export async function adminCreateReservationAction(input: db.NewReservation, force = false) {
   await requireSession();
   try {
-    const r = await db.createReservation(input, { status: "confirmada" });
+    const r = await db.createReservation(input, { status: "confirmada", force });
     return { ok: true as const, reservation: r };
   } catch (e) {
     return { ok: false as const, error: e instanceof Error ? e.message : "Error" };

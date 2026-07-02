@@ -9,6 +9,8 @@ import {
   logout,
   setReservationStatus,
   deleteReservation,
+  createReservationAdmin,
+  getAvailability,
   saveServices,
   saveReviews,
   saveGallery,
@@ -31,6 +33,7 @@ import {
 } from "@/lib/store";
 import type { Service, Review, Product, News } from "@/lib/site";
 import { formatDuration, formatPrice } from "@/lib/utils";
+import { WhatsAppIcon, PhoneIcon } from "@/components/ui/Icons";
 
 type View =
   | "resumen"
@@ -281,72 +284,367 @@ function Resumen({ role, onGo }: { role: Role; onGo: (v: View) => void }) {
 }
 
 /* ----------------- AGENDA / RESERVAS ----------------- */
+type Cita = {
+  id: string; name: string; phone: string; email?: string;
+  serviceName: string; serviceSlug: string; price: number; durationMin: number;
+  workerId: string; workerName: string; date: string; time: string; notes?: string; status: string;
+};
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+const shiftISO = (iso: string, days: number) => { const d = new Date(iso + "T00:00:00"); d.setDate(d.getDate() + days); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+const fmtLong = (iso: string) => new Date(iso + "T00:00:00").toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+// Horario del salón — espejo de HOURS en db.ts (0=Dom..6=Sáb), en minutos desde medianoche.
+const BUSINESS_HOURS: ([number, number] | null)[] = [null, [570, 1110], [570, 1110], [570, 1110], [570, 1170], [570, 1170], [570, 810]];
+function daySlots(iso: string): string[] {
+  const h = BUSINESS_HOURS[new Date(iso + "T00:00:00").getDay()];
+  if (!h) return [];
+  const out: string[] = [];
+  for (let m = h[0]; m < h[1]; m += 30) out.push(`${pad2(Math.floor(m / 60))}:${pad2(m % 60)}`);
+  return out;
+}
+function waReminderUrl(phone: string, r: { name: string; date: string; time: string; serviceName: string }): string {
+  const digits = (phone || "").replace(/\D/g, "");
+  const num = digits.length === 9 ? "34" + digits : digits;
+  const msg = `Hola ${r.name}, te recordamos tu cita en Alma Rizo el ${fmtLong(r.date)} a las ${r.time} (${r.serviceName}). ¡Te esperamos! Si necesitas cambiarla, responde a este mensaje 🌿`;
+  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+}
+
+const STATUS_BAR: Record<ReservationStatus, string> = {
+  pendiente: "border-amber-400 bg-amber-50",
+  confirmada: "border-emerald-400 bg-emerald-50",
+  completada: "border-[#c8a868] bg-[#c8a868]/10",
+  cancelada: "border-rose-300 bg-rose-50",
+};
+
 function Reservas({ role }: { role: Role }) {
   const data = useStoreData();
+  const [mode, setMode] = useState<"calendario" | "lista">("calendario");
+  const [day, setDay] = useState<string>(todayISO());
   const [filter, setFilter] = useState<"todas" | ReservationStatus>("todas");
-  const [day, setDay] = useState<string>("");
+  const [detail, setDetail] = useState<Cita | null>(null);
+  const [add, setAdd] = useState<{ open: boolean; workerId?: string; time?: string; date?: string }>({ open: false });
+  const isWorker = role === "worker";
   if (!data) return null;
 
-  let list = [...data.reservations];
-  if (filter !== "todas") list = list.filter((r) => r.status === filter);
-  if (day) list = list.filter((r) => r.date === day);
-  list.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-
-  const isWorker = role === "worker";
+  const workers: { id: string; name: string }[] = data.workers.filter((w) => w.active).map((w) => ({ id: w.id, name: w.name }));
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-3xl text-brand">Agenda de citas</h1>
         <div className="flex flex-wrap items-center gap-2">
-          <input type="date" value={day} onChange={(e) => setDay(e.target.value)} className="border border-brand/20 bg-white px-3 py-1.5 text-sm" />
-          <select value={filter} onChange={(e) => setFilter(e.target.value as typeof filter)} className="border border-brand/20 bg-white px-3 py-1.5 text-sm">
-            <option value="todas">Todas</option>
-            <option value="pendiente">Pendientes</option>
-            <option value="confirmada">Confirmadas</option>
-            <option value="completada">Completadas</option>
-            <option value="cancelada">Canceladas</option>
-          </select>
+          <div className="flex overflow-hidden rounded-full border border-brand/20 text-sm">
+            <button onClick={() => setMode("calendario")} className={`px-3.5 py-1.5 transition-colors ${mode === "calendario" ? "bg-brand text-cream" : "bg-white text-ink-soft hover:text-brand"}`}>Calendario</button>
+            <button onClick={() => setMode("lista")} className={`px-3.5 py-1.5 transition-colors ${mode === "lista" ? "bg-brand text-cream" : "bg-white text-ink-soft hover:text-brand"}`}>Lista</button>
+          </div>
+          <button onClick={() => setAdd({ open: true, date: day })} className="rounded-full bg-gold px-4 py-1.5 text-sm font-medium text-brand-deep transition-colors hover:bg-gold-soft">+ Añadir cita</button>
         </div>
       </div>
 
       {isWorker && (
         <p className="mt-3 rounded-md bg-brand/5 px-3 py-2 text-xs text-ink-soft">
-          Tu acceso es solo a la <b>agenda</b>: ver, añadir y modificar citas. No puedes editar la web, precios ni configuración.
+          Tu acceso es solo a la <b>agenda</b>: ver, añadir y confirmar citas. No puedes editar la web, precios ni configuración.
         </p>
       )}
 
-      <div className="mt-5 space-y-3">
+      {mode === "calendario" ? (
+        <DayCalendar
+          reservations={data.reservations as Cita[]}
+          day={day}
+          setDay={setDay}
+          workers={workers}
+          onOpenDetail={setDetail}
+          onAddAt={(workerId, time) => setAdd({ open: true, workerId, time, date: day })}
+        />
+      ) : (
+        <ListaCitas reservations={data.reservations as Cita[]} filter={filter} setFilter={setFilter} isWorker={isWorker} onOpenDetail={setDetail} />
+      )}
+
+      {detail && <CitaDetailModal cita={detail} isWorker={isWorker} onClose={() => setDetail(null)} />}
+      {add.open && (
+        <AddCitaModal
+          services={data.services}
+          workers={workers}
+          defaultDate={add.date ?? day}
+          presetWorkerId={add.workerId}
+          presetTime={add.time}
+          onClose={() => setAdd({ open: false })}
+        />
+      )}
+    </div>
+  );
+}
+
+function DayCalendar({ reservations, day, setDay, workers, onOpenDetail, onAddAt }: {
+  reservations: Cita[]; day: string; setDay: (v: string) => void;
+  workers: { id: string; name: string }[];
+  onOpenDetail: (c: Cita) => void; onAddAt: (workerId: string, time: string) => void;
+}) {
+  const dayRes = reservations.filter((r) => r.date === day && r.status !== "cancelada");
+  const cols = [...workers];
+  const known = new Set(workers.map((w) => w.id));
+  for (const r of dayRes) if (!known.has(r.workerId)) { known.add(r.workerId); cols.push({ id: r.workerId, name: r.workerName }); }
+  const base = daySlots(day);
+  const extra = [...new Set(dayRes.map((r) => r.time))].filter((t) => !base.includes(t));
+  const rows = [...base, ...extra].sort();
+  const grid = { gridTemplateColumns: `64px repeat(${cols.length}, minmax(140px, 1fr))` };
+
+  return (
+    <div className="mt-5">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <button onClick={() => setDay(shiftISO(day, -1))} aria-label="Día anterior" className="rounded-full border border-brand/20 bg-white px-3 py-1.5 text-ink-soft hover:text-brand">‹</button>
+          <input type="date" value={day} onChange={(e) => setDay(e.target.value || todayISO())} className="border border-brand/20 bg-white px-3 py-1.5 text-sm" />
+          <button onClick={() => setDay(shiftISO(day, 1))} aria-label="Día siguiente" className="rounded-full border border-brand/20 bg-white px-3 py-1.5 text-ink-soft hover:text-brand">›</button>
+          <button onClick={() => setDay(todayISO())} className="rounded-full border border-brand/20 bg-white px-3 py-1.5 text-xs text-ink-soft hover:text-brand">Hoy</button>
+        </div>
+        <p className="text-sm capitalize text-ink-soft">{fmtLong(day)}</p>
+      </div>
+
+      {cols.length === 0 ? (
+        <p className="rounded-lg border border-brand/10 bg-white p-6 text-sm text-ink-soft">No hay estilistas activas. Añádelas en la sección «Trabajadores».</p>
+      ) : rows.length === 0 ? (
+        <div className="rounded-lg border border-brand/10 bg-white p-8 text-center text-sm text-ink-soft">
+          El salón no abre este día. Puedes añadir una cita igualmente con <b>+ Añadir cita</b> (marca «fuera de horario»).
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-lg border border-brand/10 bg-white">
+          <div className="min-w-[560px]">
+            <div className="sticky top-0 grid border-b border-brand/10 bg-cream-soft/60" style={grid}>
+              <div className="p-2" />
+              {cols.map((w) => (
+                <div key={w.id} className="border-l border-brand/10 p-2 text-center text-sm font-medium text-brand">{w.name}</div>
+              ))}
+            </div>
+            {rows.map((time) => (
+              <div key={time} className="grid border-b border-brand/5 last:border-b-0" style={grid}>
+                <div className="p-2 text-right text-xs text-ink-soft">{time}</div>
+                {cols.map((w) => {
+                  const r = dayRes.find((x) => x.workerId === w.id && x.time === time);
+                  return (
+                    <div key={w.id} className="border-l border-brand/10 p-1.5">
+                      {r ? (
+                        <button onClick={() => onOpenDetail(r)} className={`w-full rounded-md border-l-4 px-2 py-1.5 text-left text-xs transition-shadow hover:shadow-sm ${STATUS_BAR[r.status as ReservationStatus]}`}>
+                          <span className="block truncate font-medium text-ink">{r.name}</span>
+                          <span className="block truncate text-ink-soft">{r.serviceName}</span>
+                        </button>
+                      ) : (
+                        <button onClick={() => onAddAt(w.id, time)} className="flex h-full min-h-[2.4rem] w-full items-center justify-center rounded-md text-lg text-ink-soft/25 transition-colors hover:bg-cream hover:text-gold" aria-label={`Añadir cita ${time} ${w.name}`}>+</button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-soft">
+        <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm border-l-4 border-amber-400 bg-amber-50" /> Pendiente</span>
+        <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm border-l-4 border-emerald-400 bg-emerald-50" /> Confirmada</span>
+        <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm border-l-4 border-[#c8a868] bg-[#c8a868]/10" /> Completada</span>
+        <span>· Toca una cita para confirmar o gestionar · Toca «+» para añadir</span>
+      </p>
+    </div>
+  );
+}
+
+function ListaCitas({ reservations, filter, setFilter, isWorker, onOpenDetail }: {
+  reservations: Cita[]; filter: "todas" | ReservationStatus;
+  setFilter: (v: "todas" | ReservationStatus) => void; isWorker: boolean; onOpenDetail: (c: Cita) => void;
+}) {
+  let list = [...reservations];
+  if (filter !== "todas") list = list.filter((r) => r.status === filter);
+  list.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  return (
+    <div className="mt-5">
+      <div className="mb-4 flex justify-end">
+        <select value={filter} onChange={(e) => setFilter(e.target.value as typeof filter)} className="border border-brand/20 bg-white px-3 py-1.5 text-sm">
+          <option value="todas">Todas</option>
+          <option value="pendiente">Pendientes</option>
+          <option value="confirmada">Confirmadas</option>
+          <option value="completada">Completadas</option>
+          <option value="cancelada">Canceladas</option>
+        </select>
+      </div>
+      <div className="space-y-3">
         {list.length === 0 && <p className="text-sm text-ink-soft">No hay citas con estos filtros.</p>}
         {list.map((r) => (
-          <div key={r.id} className="rounded-lg border border-brand/10 bg-white p-4">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-display text-xl text-brand">{r.name}</span>
-                  <span className={`rounded-full px-2.5 py-0.5 text-xs ${STATUS_STYLE[r.status as ReservationStatus]}`}>{r.status}</span>
-                </div>
-                <p className="mt-1 text-sm text-ink-soft">
-                  {new Date(r.date + "T00:00:00").toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" })} · {r.time} · {r.serviceName}
-                  {!isWorker && ` · ${formatPrice(r.price)}`}
-                </p>
-                <p className="mt-1 text-sm text-ink-soft">📞 {r.phone}{r.email && ` · ✉ ${r.email}`} · 💇 {r.workerName}</p>
-                {r.notes && <p className="mt-2 rounded bg-cream px-3 py-2 text-sm text-ink">📝 {r.notes}</p>}
-              </div>
-              <div className="flex flex-col items-end gap-2">
-                <select value={r.status} onChange={(e) => setReservationStatus(r.id, e.target.value as ReservationStatus)} className="border border-brand/20 bg-white px-2 py-1 text-xs">
-                  <option value="pendiente">Pendiente</option>
-                  <option value="confirmada">Confirmada</option>
-                  <option value="completada">Completada</option>
-                  <option value="cancelada">Cancelada</option>
-                </select>
-                <button onClick={() => { if (confirm("¿Eliminar esta cita?")) deleteReservation(r.id); }} className="text-xs text-rose-600 hover:underline">Eliminar</button>
-              </div>
+          <button key={r.id} onClick={() => onOpenDetail(r)} className="block w-full rounded-lg border border-brand/10 bg-white p-4 text-left transition-shadow hover:shadow-sm">
+            <div className="flex items-center gap-2">
+              <span className="font-display text-xl text-brand">{r.name}</span>
+              <span className={`rounded-full px-2.5 py-0.5 text-xs ${STATUS_STYLE[r.status as ReservationStatus]}`}>{r.status}</span>
             </div>
-          </div>
+            <p className="mt-1 text-sm capitalize text-ink-soft">
+              {fmtLong(r.date)} · {r.time} · {r.serviceName}{!isWorker && ` · ${formatPrice(r.price)}`}
+            </p>
+            <p className="mt-1 text-sm text-ink-soft">📞 {r.phone}{r.email && ` · ✉ ${r.email}`} · 💇 {r.workerName}</p>
+            {r.notes && <p className="mt-2 rounded bg-cream px-3 py-2 text-sm text-ink">📝 {r.notes}</p>}
+          </button>
         ))}
       </div>
     </div>
+  );
+}
+
+function ModalShell({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-brand-deep/50 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
+      <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-cream-soft p-6 shadow-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-display text-xl text-brand">{title}</h2>
+          <button onClick={onClose} aria-label="Cerrar" className="text-lg text-ink-soft hover:text-brand">✕</button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function CitaDetailModal({ cita, isWorker, onClose }: { cita: Cita; isWorker: boolean; onClose: () => void }) {
+  return (
+    <ModalShell title="Detalle de la cita" onClose={onClose}>
+      <div className="flex items-center gap-2">
+        <span className="font-display text-2xl text-brand">{cita.name}</span>
+        <span className={`rounded-full px-2.5 py-0.5 text-xs ${STATUS_STYLE[cita.status as ReservationStatus]}`}>{cita.status}</span>
+      </div>
+      <p className="mt-2 text-sm capitalize text-ink-soft">{fmtLong(cita.date)} · {cita.time} · {cita.serviceName}{!isWorker && ` · ${formatPrice(cita.price)}`}</p>
+      <p className="mt-1 text-sm text-ink-soft">💇 {cita.workerName}</p>
+      <p className="mt-1 text-sm text-ink-soft">📞 {cita.phone}{cita.email && ` · ✉ ${cita.email}`}</p>
+      {cita.notes && <p className="mt-2 rounded bg-cream px-3 py-2 text-sm text-ink">📝 {cita.notes}</p>}
+
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <a href={waReminderUrl(cita.phone, cita)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-3.5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">
+          <WhatsAppIcon className="h-4 w-4" /> Recordatorio
+        </a>
+        <a href={`tel:${(cita.phone || "").replace(/\s/g, "")}`} className="inline-flex items-center gap-2 rounded-full border border-brand/25 px-3.5 py-2 text-sm text-brand transition-colors hover:border-gold">
+          <PhoneIcon className="h-4 w-4" /> Llamar
+        </a>
+      </div>
+
+      <div className="mt-5 border-t border-brand/10 pt-4">
+        <span className="text-xs font-medium uppercase tracking-wide text-ink-soft">Cambiar estado</span>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {(["pendiente", "confirmada", "completada", "cancelada"] as ReservationStatus[]).map((st) => (
+            <button key={st} onClick={() => { setReservationStatus(cita.id, st); onClose(); }}
+              className={`rounded-full px-3 py-1.5 text-xs capitalize transition-colors ${cita.status === st ? "bg-brand text-cream" : "border border-brand/20 bg-white text-ink-soft hover:border-gold"}`}>
+              {st}
+            </button>
+          ))}
+        </div>
+        <button onClick={() => { if (confirm("¿Eliminar esta cita definitivamente?")) { deleteReservation(cita.id); onClose(); } }} className="mt-4 text-xs text-rose-600 hover:underline">Eliminar cita</button>
+      </div>
+    </ModalShell>
+  );
+}
+
+function AddCitaModal({ services, workers, defaultDate, presetWorkerId, presetTime, onClose }: {
+  services: { slug: string; name: string; durationMin: number; price: number }[];
+  workers: { id: string; name: string }[];
+  defaultDate: string; presetWorkerId?: string; presetTime?: string; onClose: () => void;
+}) {
+  const [serviceSlug, setServiceSlug] = useState(services[0]?.slug ?? "");
+  const [workerId, setWorkerId] = useState(presetWorkerId ?? "sin-preferencia");
+  const [date, setDate] = useState(defaultDate);
+  const [time, setTime] = useState(presetTime ?? "");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [notes, setNotes] = useState("");
+  const [force, setForce] = useState(false);
+  const [slots, setSlots] = useState<string[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const dur = services.find((s) => s.slug === serviceSlug)?.durationMin ?? 60;
+
+  useEffect(() => {
+    if (force) return;
+    let alive = true;
+    setLoadingSlots(true);
+    getAvailability(date, workerId, dur)
+      .then((s) => { if (!alive) return; setSlots(s); setLoadingSlots(false); setTime((cur) => (cur && s.includes(cur) ? cur : s[0] ?? "")); })
+      .catch(() => { if (alive) { setSlots([]); setLoadingSlots(false); } });
+    return () => { alive = false; };
+  }, [serviceSlug, workerId, date, dur, force]);
+
+  const submit = async () => {
+    setError("");
+    if (!serviceSlug) { setError("Elige un servicio."); return; }
+    if (!name.trim() || !phone.trim()) { setError("Nombre y teléfono son obligatorios."); return; }
+    if (!time) { setError("Elige una hora."); return; }
+    setSaving(true);
+    const r = await createReservationAdmin({ serviceSlug, workerId, date, time, name: name.trim(), phone: phone.trim(), email: email.trim(), notes: notes.trim() }, force);
+    setSaving(false);
+    if (r.ok) onClose();
+    else setError(r.error ?? "No se pudo crear la cita.");
+  };
+
+  return (
+    <ModalShell title="Añadir cita" onClose={onClose}>
+      <div className="space-y-3">
+        <div>
+          <label className="mb-1 block text-xs text-ink-soft">Servicio</label>
+          <select value={serviceSlug} onChange={(e) => setServiceSlug(e.target.value)} className={inputCls}>
+            {services.map((s) => <option key={s.slug} value={s.slug}>{s.name} · {formatDuration(s.durationMin)}</option>)}
+          </select>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs text-ink-soft">Estilista</label>
+            <select value={workerId} onChange={(e) => setWorkerId(e.target.value)} className={inputCls}>
+              <option value="sin-preferencia">Sin preferencia</option>
+              {workers.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-ink-soft">Fecha</label>
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputCls} />
+          </div>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-ink-soft">Hora {!force && loadingSlots && <span className="text-ink-soft/60">· cargando…</span>}</label>
+          {force ? (
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className={inputCls} />
+          ) : slots.length === 0 && !loadingSlots ? (
+            <p className="rounded bg-amber-50 px-3 py-2 text-xs text-amber-800">No hay horas libres ese día para esa estilista. Prueba otra fecha/estilista o marca «fuera de horario».</p>
+          ) : (
+            <select value={time} onChange={(e) => setTime(e.target.value)} className={inputCls}>
+              {slots.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          )}
+          <label className="mt-2 flex items-center gap-2 text-xs text-ink-soft">
+            <input type="checkbox" checked={force} onChange={(e) => { setForce(e.target.checked); if (e.target.checked && !time) setTime("10:00"); }} />
+            Fuera de horario (petición especial por teléfono)
+          </label>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs text-ink-soft">Nombre*</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} className={inputCls} placeholder="Nombre de la clienta" />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-ink-soft">Teléfono*</label>
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} placeholder="600 000 000" />
+          </div>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-ink-soft">Email (opcional)</label>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} placeholder="correo@ejemplo.com" />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-ink-soft">Notas (opcional)</label>
+          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className={inputCls} placeholder="Petición por teléfono, alergias, etc." />
+        </div>
+        {error && <p className="rounded bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
+        <div className="flex justify-end gap-2 pt-1">
+          <button onClick={onClose} className="rounded-full border border-brand/20 px-4 py-2 text-sm text-ink-soft transition-colors hover:text-brand">Cancelar</button>
+          <button onClick={submit} disabled={saving} className="rounded-full bg-gold px-5 py-2 text-sm font-medium text-brand-deep transition-colors hover:bg-gold-soft disabled:opacity-60">{saving ? "Guardando…" : "Crear cita"}</button>
+        </div>
+      </div>
+    </ModalShell>
   );
 }
 

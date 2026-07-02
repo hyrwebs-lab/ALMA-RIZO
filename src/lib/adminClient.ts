@@ -111,6 +111,13 @@ export function useSession(): { session: Session; ready: boolean } {
 /* ---- mutations (fire then refresh) ---- */
 export const setReservationStatus = (id: string, status: any) => void A.adminSetStatusAction(id, status).then(refresh);
 export const deleteReservation = (id: string) => void A.adminDeleteReservationAction(id).then(refresh);
+export async function createReservationAdmin(input: any, force = false): Promise<{ ok: boolean; error?: string }> {
+  const r = await A.adminCreateReservationAction(input, force);
+  if (r.ok) await refresh();
+  return r.ok ? { ok: true } : { ok: false, error: (r as any).error };
+}
+export const getAvailability = (date: string, workerId: string, durationMin: number): Promise<string[]> =>
+  A.getAvailabilityAction(date, workerId, durationMin);
 export const saveServices = (items: any) => void A.saveServicesAction(items).then(refresh);
 export const saveWorkers = (items: any) => void A.saveWorkersAction(items).then(refresh);
 export const saveReviews = (items: any) => void A.saveReviewsAction(items).then(refresh);
