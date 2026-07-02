@@ -7,8 +7,6 @@ import { telUrl } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import {
   InstagramIcon,
-  TikTokIcon,
-  FacebookIcon,
   MapPinIcon,
   PhoneIcon,
   ClockIcon,
@@ -75,12 +73,6 @@ export default function Footer() {
           <div className="mt-6 flex items-center gap-4">
             <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition-colors hover:text-gold">
               <InstagramIcon className="h-5 w-5" />
-            </a>
-            <a href={site.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="transition-colors hover:text-gold">
-              <TikTokIcon className="h-5 w-5" />
-            </a>
-            <a href={site.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition-colors hover:text-gold">
-              <FacebookIcon className="h-5 w-5" />
             </a>
           </div>
         </div>

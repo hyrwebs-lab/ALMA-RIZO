@@ -130,20 +130,20 @@ function Novedades({ news }: { news: News[] }) {
         <path d="M470 30c70 40 50 120-20 135s-60 95 25 125 80 75 5 150" />
       </svg>
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24 sm:px-8">
-        <div className="mb-8 flex items-center gap-4 sm:mb-10">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-14 sm:px-8 sm:py-24">
+        <div className="mb-6 flex items-center gap-4 sm:mb-10">
           <span className="eyebrow flex items-center gap-2 whitespace-nowrap text-gold"><Sparkle className="h-3.5 w-3.5" /> {t.hero.novedadesTitle}</span>
           <span className="h-px flex-1 bg-gradient-to-r from-gold/50 to-transparent" />
         </div>
 
-        <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+        <div className="grid items-center gap-6 sm:gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
           {/* Destacado — titular editorial grande */}
           {featured && (
-            <div className="relative border-l-2 border-gold/60 pl-6 sm:pl-8">
+            <div className="relative border-l-2 border-gold/60 pl-5 sm:pl-8">
               <span className="text-[0.62rem] font-medium uppercase tracking-[0.25em] text-gold-soft">{featured.tag}</span>
-              <h2 className="mt-3 font-display leading-[1.03] text-[2.1rem] sm:text-5xl md:text-6xl">{featured.title}</h2>
-              <p className="mt-5 max-w-lg text-base leading-relaxed text-cream/80 line-clamp-3 sm:text-lg">{featured.text}</p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <h2 className="mt-2.5 font-display text-[1.7rem] leading-[1.05] sm:mt-3 sm:text-5xl sm:leading-[1.03] md:text-6xl">{featured.title}</h2>
+              <p className="mt-3.5 max-w-lg text-sm leading-relaxed text-cream/80 line-clamp-2 sm:mt-5 sm:text-lg sm:line-clamp-3">{featured.text}</p>
+              <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
                 <ButtonLink href="/reservar" variant="gold" size="md">{t.cta.reservarAhora}</ButtonLink>
                 <ButtonLink href="/productos" variant="outlineLight" size="md">{t.cta.verProductos}</ButtonLink>
               </div>
@@ -152,10 +152,10 @@ function Novedades({ news }: { news: News[] }) {
 
           {/* Secundarias — panel elegante con índice */}
           {rest.length > 0 && (
-            <div className="rounded-3xl border border-cream/12 bg-gradient-to-b from-cream-soft/[0.09] to-cream-soft/[0.02] p-6 backdrop-blur-sm sm:p-8">
+            <div className="rounded-3xl border border-cream/12 bg-gradient-to-b from-cream-soft/[0.09] to-cream-soft/[0.02] p-5 backdrop-blur-sm sm:p-8">
               <ul className="divide-y divide-cream/10">
                 {rest.map((n, idx) => (
-                  <li key={n.title} className="group flex gap-4 py-4 first:pt-0 last:pb-0">
+                  <li key={n.title} className="group flex gap-4 py-3 first:pt-0 last:pb-0 sm:py-4">
                     <span className="font-display text-2xl leading-none text-gold/55 transition-colors group-hover:text-gold">0{idx + 2}</span>
                     <div className="min-w-0">
                       <span className="text-[0.58rem] font-medium uppercase tracking-[0.2em] text-gold">{n.tag}</span>
