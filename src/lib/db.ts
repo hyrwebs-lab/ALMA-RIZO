@@ -108,20 +108,33 @@ async function initDb(c: Client) {
 }
 
 /* ---------- availability & reservations ---------- */
+const toMin = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+
 export async function slotsForDate(dateStr: string, workerId: string, durationMin: number): Promise<string[]> {
   const wd = new Date(dateStr + "T00:00:00").getDay();
   const range = HOURS[wd];
   if (!range) return [];
   const [open, close] = range;
   const active = (await q("SELECT id FROM workers WHERE active = 1")).rows as unknown as { id: string }[];
-  const rows = (await q("SELECT workerId, time FROM reservations WHERE date = ? AND status != 'cancelada'", [dateStr])).rows as unknown as { workerId: string; time: string }[];
+  const dayRes = (await q("SELECT workerId, time, durationMin FROM reservations WHERE date = ? AND status != 'cancelada'", [dateStr])).rows as unknown as { workerId: string; time: string; durationMin: number }[];
+  // Una estilista está ocupada en [inicio, inicio+duración). Un hueco vale si el
+  // nuevo servicio [s,e) NO se solapa con ninguna cita suya (se tiene en cuenta
+  // la duración real de cada cita, no solo la hora de inicio).
+  const overlaps = (wid: string, s: number, e: number) =>
+    dayRes.some((r) => r.workerId === wid && s < toMin(r.time) + (Number(r.durationMin) || 30) && toMin(r.time) < e);
+
+  // Si la fecha es hoy, no ofrecer horas que ya han pasado.
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const nowMin = dateStr === todayStr ? now.getHours() * 60 + now.getMinutes() : -1;
+
   const out: string[] = [];
   for (let mt = open; mt + durationMin <= close; mt += 30) {
+    if (mt <= nowMin) continue;
     const label = `${pad(Math.floor(mt / 60))}:${pad(mt % 60)}`;
     if (workerId === "sin-preferencia") {
-      const takenBy = new Set(rows.filter((r) => r.time === label).map((r) => r.workerId));
-      if (active.some((w) => !takenBy.has(w.id))) out.push(label);
-    } else if (!rows.some((r) => r.time === label && r.workerId === workerId)) {
+      if (active.some((w) => !overlaps(w.id, mt, mt + durationMin))) out.push(label);
+    } else if (!overlaps(workerId, mt, mt + durationMin)) {
       out.push(label);
     }
   }
@@ -135,23 +148,29 @@ export async function createReservation(input: NewReservation, opts?: { status?:
   if (!svc) throw new Error("Servicio no válido");
 
   // `force` (solo admin) permite citas fuera de horario; el bloqueo de doble
-  // reserva se mantiene siempre gracias al índice UNIQUE y a `takenAt`.
+  // reserva (por solapamiento) se mantiene siempre más abajo.
   if (!opts?.force) {
     const avail = await slotsForDate(input.date, input.workerId, svc.durationMin);
     if (!avail.includes(input.time)) throw new Error("Esa hora ya no está disponible");
   }
 
   const active = (await q("SELECT id, name FROM workers WHERE active = 1")).rows as unknown as { id: string; name: string }[];
-  const takenAt = new Set((await q("SELECT workerId FROM reservations WHERE date = ? AND time = ? AND status != 'cancelada'", [input.date, input.time])).rows.map((r) => (r as unknown as { workerId: string }).workerId));
+  // Bloqueo de doble reserva por SOLAPAMIENTO (respeta la duración de cada cita).
+  // Se aplica siempre, también con `force`.
+  const newStart = toMin(input.time);
+  const newEnd = newStart + svc.durationMin;
+  const dayRes = (await q("SELECT workerId, time, durationMin FROM reservations WHERE date = ? AND status != 'cancelada'", [input.date])).rows as unknown as { workerId: string; time: string; durationMin: number }[];
+  const overlaps = (wid: string) =>
+    dayRes.some((r) => r.workerId === wid && newStart < toMin(r.time) + (Number(r.durationMin) || 30) && toMin(r.time) < newEnd);
 
   let candidates: { id: string; name: string }[];
   if (input.workerId === "sin-preferencia") {
-    candidates = active.filter((w) => !takenAt.has(w.id));
+    candidates = active.filter((w) => !overlaps(w.id));
     if (!candidates.length) throw new Error("No hay disponibilidad a esa hora");
   } else {
     const w = active.find((x) => x.id === input.workerId);
     if (!w) throw new Error("Estilista no válida");
-    if (takenAt.has(w.id)) throw new Error("Esa hora ya no está disponible");
+    if (overlaps(w.id)) throw new Error("Esa hora ya no está disponible");
     candidates = [w];
   }
 

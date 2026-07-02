@@ -26,7 +26,7 @@ export const site = {
 
   social: {
     // Cuenta del SALÓN — es a la que redirige principalmente la web.
-    instagram: "https://www.instagram.com/p/DaLkbr3syF9/",
+    instagram: "https://www.instagram.com/almarizo.studio/",
     tiktok: "", // ⚠️ pendiente — enlace real del salón (si tienen)
     facebook: "", // ⚠️ pendiente — enlace real (si tienen)
   },
@@ -54,7 +54,7 @@ export const site = {
   // Vídeo de fondo del banner (portada). Cuando lo envíen, colocar el .mp4 en
   // /public/videos/portada.mp4 y poner aquí "/videos/portada.mp4".
   heroVideo: "", // ⚠️ PLACEHOLDER — vídeo de Instagram para el banner
-  heroVideoLink: "https://www.instagram.com/p/DaLkbr3syF9/", // al pulsar el vídeo, se abre el IG del salón
+  heroVideoLink: "https://www.instagram.com/almarizo.studio/", // al pulsar el vídeo, se abre el IG del salón
 } as const;
 
 export type Service = {

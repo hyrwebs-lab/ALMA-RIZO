@@ -182,9 +182,6 @@ function Dashboard({ role, name }: { role: Role; name: string }) {
         </aside>
 
         <main className="min-w-0 flex-1">
-          <div className="mb-5 rounded-md border border-emerald-300/50 bg-emerald-50 px-4 py-2.5 text-xs text-emerald-800">
-            Conectado a la base de datos real · los cambios se guardan de verdad y se comparten entre todos los dispositivos.
-          </div>
           {view === "resumen" && <Resumen role={role} onGo={setView} />}
           {view === "reservas" && <Reservas role={role} />}
           {view === "servicios" && <ServiciosEditor />}
