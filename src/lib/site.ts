@@ -25,9 +25,10 @@ export const site = {
   },
 
   social: {
-    instagram: "https://www.instagram.com/mimasbymaricruz/", // cuenta real (≈19k seguidores)
-    tiktok: "https://www.tiktok.com/@mimasbymaricruz", // ⚠️ confirmar handle real
-    facebook: "https://facebook.com/", // ⚠️ PLACEHOLDER — pedir enlace real
+    // Cuenta del SALÓN — es a la que redirige principalmente la web.
+    instagram: "https://www.instagram.com/p/DaLkbr3syF9/",
+    tiktok: "", // ⚠️ pendiente — enlace real del salón (si tienen)
+    facebook: "", // ⚠️ pendiente — enlace real (si tienen)
   },
 
   // L-X 9:30-18:30 | J-V 9:30-19:30 | Sáb 9:30-13:30 | Dom cerrado
@@ -53,7 +54,7 @@ export const site = {
   // Vídeo de fondo del banner (portada). Cuando lo envíen, colocar el .mp4 en
   // /public/videos/portada.mp4 y poner aquí "/videos/portada.mp4".
   heroVideo: "", // ⚠️ PLACEHOLDER — vídeo de Instagram para el banner
-  heroVideoLink: "https://www.instagram.com/mimasbymaricruz/", // al pulsar el vídeo, se abre aquí
+  heroVideoLink: "https://www.instagram.com/p/DaLkbr3syF9/", // al pulsar el vídeo, se abre el IG del salón
 } as const;
 
 export type Service = {

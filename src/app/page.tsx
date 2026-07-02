@@ -7,6 +7,7 @@ import About from "@/components/home/About";
 import ProductsPreview from "@/components/home/ProductsPreview";
 import Reviews from "@/components/home/Reviews";
 import Location from "@/components/home/Location";
+import Brands from "@/components/home/Brands";
 import FinalCTA from "@/components/home/FinalCTA";
 import { site } from "@/lib/site";
 import { getServices, getProducts, getReviews, getNews } from "@/lib/content";
@@ -54,6 +55,7 @@ export default async function Home() {
       <ProductsPreview products={products} />
       <Reviews reviews={reviews} />
       <Location />
+      <Brands />
       <FinalCTA />
     </>
   );
