@@ -1,18 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import Reveal from "@/components/ui/Reveal";
 import { useLang } from "@/lib/i18n";
 
-// Marcas con las que trabaja el salón (de la info facilitada).
+// Logos reales de las marcas con las que trabaja el salón (de su carta).
 const BRANDS = [
-  "Actyva",
-  "Schwarzkopf Professional",
-  "Every Green",
-  "Salerm Cosmetics",
-  "Montibello",
-  "Argabeta",
-  "Aunt Jackie's",
-  "As I Am",
+  { name: "Actyva", src: "/brands/actyva.png", w: 200, h: 254 },
+  { name: "Schwarzkopf Professional", src: "/brands/schwarzkopf.png", w: 261, h: 145 },
+  { name: "Every Green", src: "/brands/everygreen.png", w: 250, h: 88 },
+  { name: "Salerm Cosmetics", src: "/brands/salerm.png", w: 227, h: 58 },
+  { name: "Montibello", src: "/brands/montibello.png", w: 241, h: 94 },
+  { name: "Argabeta", src: "/brands/argabeta.png", w: 158, h: 121 },
+  { name: "Aunt Jackie's", src: "/brands/auntjackies.png", w: 189, h: 97 },
+  { name: "As I Am", src: "/brands/asiam.png", w: 230, h: 152 },
 ];
 
 const COPY: Record<string, { eyebrow: string; title: string }> = {
@@ -24,13 +25,16 @@ const COPY: Record<string, { eyebrow: string; title: string }> = {
 
 function Row({ hidden = false }: { hidden?: boolean }) {
   return (
-    <ul className="flex shrink-0 items-center gap-x-12 pr-12 sm:gap-x-20 sm:pr-20" aria-hidden={hidden}>
+    <ul className="flex shrink-0 items-center gap-x-12 pr-12 sm:gap-x-16 sm:pr-16" aria-hidden={hidden}>
       {BRANDS.map((b) => (
-        <li
-          key={b}
-          className="whitespace-nowrap font-display text-xl uppercase tracking-[0.16em] text-brand/50 transition-colors duration-300 hover:text-brand sm:text-[1.7rem]"
-        >
-          {b}
+        <li key={b.name} className="flex h-9 shrink-0 items-center sm:h-11">
+          <Image
+            src={b.src}
+            alt={b.name}
+            width={b.w}
+            height={b.h}
+            className="h-full w-auto object-contain opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+          />
         </li>
       ))}
     </ul>
