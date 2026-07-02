@@ -67,6 +67,7 @@ export default function Footer() {
                 <span className="block">Lun–Mié · 9:30–18:30</span>
                 <span className="block">Jue–Vie · 9:30–19:30</span>
                 <span className="block">Sáb · 9:30–13:30</span>
+                <span className="mt-1 block text-gold-soft">Con atención al mediodía</span>
               </span>
             </li>
           </ul>
