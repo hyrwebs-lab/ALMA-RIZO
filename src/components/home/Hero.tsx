@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/Button";
 import { PhoneIcon, ArrowIcon, WhatsAppIcon } from "@/components/ui/Icons";
@@ -8,17 +8,20 @@ import { telUrl, whatsappUrl } from "@/lib/utils";
 import { site, news as seedNews, type News } from "@/lib/site";
 import { useT } from "@/lib/i18n";
 
+// Duración en pantalla de cada diapositiva (ms). Novedades dura más (hay que leerla).
+const DURATIONS = [8000, 10500, 8000];
+
 export default function Hero({ news }: { news?: News[] }) {
   const t = useT();
   const newsList = news ?? seedNews;
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
-  const go = useCallback((n: number) => setI(((n % 3) + 3) % 3), []);
+  const go = (n: number) => setI(((n % 3) + 3) % 3);
 
   useEffect(() => {
     if (paused) return;
-    const timer = setInterval(() => setI((v) => (v + 1) % 3), 7000);
-    return () => clearInterval(timer);
+    const timer = setTimeout(() => setI((v) => (v + 1) % 3), DURATIONS[i]);
+    return () => clearTimeout(timer);
   }, [paused, i]);
 
   const slideLabels = [t.hero.slides.portada, t.hero.slides.novedades, t.hero.slides.contacto];
@@ -56,7 +59,7 @@ export default function Hero({ news }: { news?: News[] }) {
 function Slide({ active, children }: { active: boolean; children: React.ReactNode }) {
   return (
     <div
-      className={`absolute inset-0 flex items-center transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`absolute inset-0 flex items-center justify-center transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
         active ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-4"
       }`}
       aria-hidden={!active}
@@ -88,9 +91,9 @@ function Portada() {
         )}
       </div>
 
-      <div className="pointer-events-none relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-6 pt-24 text-center sm:px-8">
+      <div className="pointer-events-none relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-6 text-center sm:px-8">
         <h1 className="sr-only">Alma Rizo · {t.hero.subtitle}</h1>
-        <Image src="/logos/logo-light.png" alt="Alma Rizo · Curly Studio by MariCruz" width={1242} height={594} priority sizes="(min-width: 640px) 540px, 84vw" className="h-auto w-[84vw] max-w-[540px] drop-shadow-[0_8px_40px_rgba(0,0,0,0.35)]" />
+        <Image src="/logos/logo-light.png" alt="Alma Rizo · Curly Studio by MariCruz" width={1242} height={594} priority sizes="(min-width: 640px) 540px, 84vw" className="h-auto w-[84vw] max-w-[520px] drop-shadow-[0_8px_40px_rgba(0,0,0,0.35)]" />
         <p className="mx-auto mt-6 max-w-xl text-lg text-cream/85 sm:text-xl">{t.hero.subtitle}</p>
         <div className="pointer-events-auto mt-9 flex flex-wrap items-center justify-center gap-4">
           <ButtonLink href="/reservar" variant="gold" size="lg">{t.cta.reservar} <ArrowIcon className="h-4 w-4" /></ButtonLink>
@@ -107,9 +110,9 @@ function Portada() {
 }
 
 /* ---------- SLIDE 2: NOVEDADES ---------- */
-function Sparkle() {
+function Sparkle({ className = "h-3.5 w-3.5" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
       <path d="M12 2l1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z" />
     </svg>
   );
@@ -121,29 +124,37 @@ function Novedades({ news }: { news: News[] }) {
     <>
       <div className="absolute inset-0 bg-gradient-to-br from-brand via-brand-deep to-brand" />
       <div className="absolute inset-0" style={{ background: "radial-gradient(55% 50% at 25% 28%, rgba(200,168,104,0.18), transparent 70%)" }} />
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-24 sm:px-8">
-        <p className="gold-rule eyebrow mb-8 justify-center text-gold">{t.hero.novedadesTitle}</p>
-        <div className="grid gap-5 md:grid-cols-2 md:items-stretch">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24 sm:px-8">
+        <div className="mb-9 flex items-center justify-center gap-4">
+          <span className="h-px w-10 bg-gold/45" />
+          <p className="eyebrow flex items-center gap-2 text-gold"><Sparkle className="h-3.5 w-3.5" /> {t.hero.novedadesTitle}</p>
+          <span className="h-px w-10 bg-gold/45" />
+        </div>
+        <div className="grid gap-6 md:grid-cols-[1.12fr_0.88fr] md:items-stretch">
           {featured && (
-            <div className="flex flex-col justify-center rounded-3xl border border-gold/25 bg-cream-soft/[0.05] p-8 backdrop-blur-sm md:p-10">
-              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-gold/20 px-3 py-1 text-[0.62rem] font-medium uppercase tracking-widest text-gold-soft">
+            <article className="relative flex flex-col justify-center overflow-hidden rounded-3xl border border-gold/25 bg-gradient-to-br from-cream-soft/[0.08] to-cream-soft/[0.02] p-8 backdrop-blur-sm md:p-11">
+              <span className="pointer-events-none absolute -right-10 -top-10 text-gold/10"><Sparkle className="h-40 w-40" /></span>
+              <span className="relative inline-flex w-fit items-center gap-2 rounded-full bg-gold/20 px-3.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.18em] text-gold-soft">
                 <Sparkle /> {featured.tag}
               </span>
-              <h2 className="mt-4 font-display text-3xl leading-[1.1] sm:text-4xl">{featured.title}</h2>
-              <p className="mt-3 leading-relaxed text-cream/80">{featured.text}</p>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <h2 className="relative mt-5 font-display text-3xl leading-[1.08] sm:text-4xl md:text-[2.6rem]">{featured.title}</h2>
+              <p className="relative mt-4 max-w-md leading-relaxed text-cream/80">{featured.text}</p>
+              <div className="relative mt-8 flex flex-wrap gap-3">
                 <ButtonLink href="/reservar" variant="gold" size="md">{t.cta.reservarAhora}</ButtonLink>
                 <ButtonLink href="/productos" variant="outlineLight" size="md">{t.cta.verProductos}</ButtonLink>
               </div>
-            </div>
+            </article>
           )}
-          <div className="grid gap-5">
-            {rest.map((n) => (
-              <div key={n.title} className="group flex flex-col justify-center rounded-2xl border border-cream/12 bg-cream-soft/[0.05] p-6 backdrop-blur-sm transition-colors duration-300 hover:border-gold/40">
-                <span className="text-[0.6rem] font-medium uppercase tracking-widest text-gold">{n.tag}</span>
-                <h3 className="mt-2 font-display text-xl">{n.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-cream/70">{n.text}</p>
-              </div>
+          <div className="flex flex-col gap-4">
+            {rest.map((n, idx) => (
+              <article key={n.title} className="group flex flex-1 items-start gap-4 rounded-2xl border border-cream/12 bg-cream-soft/[0.04] p-5 transition-all duration-300 hover:border-gold/40 hover:bg-cream-soft/[0.07] sm:p-6">
+                <span className="font-display text-3xl leading-none text-gold/50 transition-colors group-hover:text-gold/80">0{idx + 2}</span>
+                <div className="min-w-0">
+                  <span className="text-[0.6rem] font-medium uppercase tracking-[0.18em] text-gold">{n.tag}</span>
+                  <h3 className="mt-1 font-display text-xl leading-snug">{n.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-cream/70">{n.text}</p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
@@ -158,7 +169,8 @@ function Contacto() {
   return (
     <>
       <div className="absolute inset-0 bg-gradient-to-b from-brand-deep via-brand to-brand-deep" />
-      <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pt-24 text-center sm:px-8">
+      <div className="absolute inset-0" style={{ background: "radial-gradient(50% 50% at 50% 40%, rgba(200,168,104,0.14), transparent 70%)" }} />
+      <div className="relative z-10 mx-auto w-full max-w-3xl px-6 text-center sm:px-8">
         <p className="gold-rule eyebrow mb-6 justify-center text-gold">{t.hero.contactoEyebrow}</p>
         <h2 className="font-display text-4xl leading-tight sm:text-6xl">{t.hero.contactoTitle}</h2>
         <p className="mx-auto mt-4 max-w-md text-lg text-cream/80">

@@ -172,6 +172,22 @@ export default function Header() {
               {label(item.href)}
             </Link>
           ))}
+          <div
+            className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-cream/70"
+            style={{
+              transitionDelay: open ? `${100 + nav.length * 50}ms` : "0ms",
+              transform: open ? "none" : "translateY(10px)",
+              opacity: open ? 1 : 0,
+              transitionProperty: "opacity, transform",
+              transitionDuration: "500ms",
+            }}
+          >
+            <Link href="/metodo" className="transition-colors hover:text-gold">{t.footer.metodo}</Link>
+            <span className="text-cream/25">·</span>
+            <Link href="/consejos" className="transition-colors hover:text-gold">{t.footer.consejos}</Link>
+            <span className="text-cream/25">·</span>
+            <Link href="/faq" className="transition-colors hover:text-gold">{t.footer.faq}</Link>
+          </div>
           <ButtonLink href="/reservar" variant="gold" size="lg" className="mt-4">
             {t.cta.reservar}
           </ButtonLink>
