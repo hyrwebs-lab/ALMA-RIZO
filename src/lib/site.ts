@@ -434,9 +434,9 @@ export const consejos: Consejo[] = [
 
 export type MetodoStep = { n: string; title: string; text: string };
 export const metodoSteps: MetodoStep[] = [
-  { n: "01", title: "Diagnóstico", text: "Analizamos tu tipo de rizo, su porosidad y su estado, y escuchamos tu rutina y tus objetivos." },
-  { n: "02", title: "Corte en seco", text: "Cortamos rizo a rizo, en seco, respetando tu patrón natural para darle forma y controlar el volumen." },
-  { n: "03", title: "Tratamiento", text: "Hidratamos y nutrimos según lo que tu cabello necesita, devolviéndole elasticidad y salud." },
-  { n: "04", title: "Definición", text: "Aplicamos técnica y productos a tu medida para un rizo definido, natural y duradero." },
-  { n: "05", title: "Educación", text: "Te enseñamos tu rutina y los productos adecuados para que mantengas el resultado en casa." },
+  { n: "01", title: "Diagnóstico y asesoramiento", text: "Analizamos tu tipo de rizo, su estado y tus necesidades, y te asesoramos de forma personalizada." },
+  { n: "02", title: "Corte", text: "Corte adaptado a tu tipo de rizo para mantener forma, movimiento y equilibrio." },
+  { n: "03", title: "Tratamiento profundo", text: "Tratamiento profundo para recuperar hidratación y salud, controlando el encrespamiento." },
+  { n: "04", title: "Definición profesional", text: "Definición rizo a rizo para potenciar la forma natural de tu rizo." },
+  { n: "05", title: "Asesoramiento para casa", text: "Te enseñamos a cuidar y definir tu rizo en casa para que mantengas el resultado." },
 ];
