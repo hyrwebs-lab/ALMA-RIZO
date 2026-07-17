@@ -120,7 +120,14 @@ function Novedades({ news }: { news: News[] }) {
 
       {/* Destacado — tarjeta central tipo cristal */}
       {featured && (
-        <div className="rounded-[1.6rem] border border-cream/15 bg-brand-deep/40 px-6 py-8 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.7)] backdrop-blur-md sm:rounded-[2.2rem] sm:px-12 sm:py-12">
+        <div className="overflow-hidden rounded-[1.6rem] border border-cream/15 bg-brand-deep/40 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.7)] backdrop-blur-md sm:rounded-[2.2rem]">
+          {featured.image && (
+            <div className="relative h-40 w-full sm:h-56">
+              <Image src={featured.image} alt={featured.title} fill sizes="(min-width:640px) 42rem, 90vw" className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-deep/70 to-transparent" />
+            </div>
+          )}
+          <div className="px-6 py-8 sm:px-12 sm:py-10">
           <span className="inline-flex items-center gap-2 rounded-full bg-gold/25 px-3.5 py-1 text-[0.6rem] font-medium uppercase tracking-[0.22em] text-gold-soft">
             <Sparkle className="h-3 w-3" /> {featured.tag}
           </span>
@@ -129,6 +136,7 @@ function Novedades({ news }: { news: News[] }) {
           <div className="mt-7 flex flex-wrap justify-center gap-3 sm:mt-8">
             <ButtonLink href="/reservar" variant="gold" size="md">{t.cta.reservarAhora}</ButtonLink>
             <ButtonLink href="/productos" variant="outlineLight" size="md">{t.cta.verProductos}</ButtonLink>
+          </div>
           </div>
         </div>
       )}

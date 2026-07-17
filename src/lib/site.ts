@@ -335,7 +335,7 @@ export const products: Product[] = [
   },
 ];
 
-export type News = { title: string; text: string; tag: string };
+export type News = { title: string; text: string; tag: string; image?: string };
 
 /* Novedades / promociones para el carrusel de portada. ⚠️ Contenido de ejemplo editable. */
 export const news: News[] = [
@@ -343,11 +343,13 @@ export const news: News[] = [
     tag: "Promoción",
     title: "20% en tu primera visita",
     text: "Reserva tu diagnóstico + corte curly este mes y llévate un 20% de descuento.",
+    image: "/photos/curly-color-bride.jpg",
   },
   {
     tag: "Nuevo producto",
     title: "Nueva crema de definición",
     text: "Ya disponible en el salón nuestra crema de definición para rizos más marcados y duraderos.",
+    image: "/photos/products-ritual.jpg",
   },
   {
     tag: "Agenda",

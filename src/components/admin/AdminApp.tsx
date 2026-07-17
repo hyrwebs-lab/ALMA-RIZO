@@ -52,6 +52,16 @@ type View =
 type Pair = { before: string; after: string; label: string };
 
 const PHOTO_POOL = [
+  "/photos/curly-portrait-color.jpg",
+  "/photos/curly-color-bride.jpg",
+  "/photos/curly-editorial-1.jpg",
+  "/photos/curly-editorial-2.jpg",
+  "/photos/curly-back.jpg",
+  "/photos/curly-hombre.jpg",
+  "/photos/curly-kids.jpg",
+  "/photos/curly-silhouette.jpg",
+  "/photos/spa-ritual.jpg",
+  "/photos/products-ritual.jpg",
   "/photos/real-portrait.jpg",
   "/photos/real-despues-rizo.jpg",
   "/photos/real-antes-rizo.jpg",
@@ -914,6 +924,16 @@ function NovedadesEditor() {
               <button onClick={() => remove(i)} className="text-xs text-rose-600 hover:underline">Eliminar</button>
             </div>
             <textarea className={`${inputCls} mt-2 h-16 resize-none text-sm`} value={n.text} onChange={(e) => update(i, { text: e.target.value })} placeholder="Texto" />
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-xs text-ink-soft">Foto:</span>
+              <select className={`${inputCls} max-w-[240px] text-sm`} value={n.image ?? ""} onChange={(e) => update(i, { image: e.target.value })}>
+                <option value="">Sin imagen</option>
+                {PHOTO_POOL.map((p) => (
+                  <option key={p} value={p}>{p.split("/").pop()}</option>
+                ))}
+              </select>
+              {n.image && <img src={n.image} alt="" className="h-10 w-10 rounded object-cover" />}
+            </div>
           </div>
         ))}
       </div>

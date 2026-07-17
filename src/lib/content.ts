@@ -35,7 +35,7 @@ export async function getReviews(): Promise<Review[]> {
 }
 
 export async function getNews(): Promise<News[]> {
-  return (await db.allNews()).map((r: any) => ({ tag: r.tag, title: r.title, text: r.text }));
+  return (await db.allNews()).map((r: any) => ({ tag: r.tag, title: r.title, text: r.text, image: r.image || undefined }));
 }
 
 export async function getGallery(): Promise<{ src: string; alt: string; real?: boolean }[]> {

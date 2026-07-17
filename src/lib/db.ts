@@ -77,7 +77,7 @@ async function initDb(c: Client) {
     CREATE UNIQUE INDEX IF NOT EXISTS uniq_slot ON reservations(workerId, date, time) WHERE status != 'cancelada';
     CREATE TABLE IF NOT EXISTS reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, rating REAL, text TEXT, source TEXT, sort INTEGER);
     CREATE TABLE IF NOT EXISTS products (slug TEXT PRIMARY KEY, name TEXT, description TEXT, price INTEGER, image TEXT, active INTEGER, sort INTEGER);
-    CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY AUTOINCREMENT, tag TEXT, title TEXT, text TEXT, sort INTEGER);
+    CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY AUTOINCREMENT, tag TEXT, title TEXT, text TEXT, image TEXT, sort INTEGER);
     CREATE TABLE IF NOT EXISTS messages (id TEXT PRIMARY KEY, name TEXT, email TEXT, phone TEXT, text TEXT, createdAt TEXT, read INTEGER);
     CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
     CREATE TABLE IF NOT EXISTS users (email TEXT PRIMARY KEY, name TEXT, role TEXT, passHash TEXT);
@@ -97,7 +97,7 @@ async function initDb(c: Client) {
   ].forEach((w, i) => stmts.push({ sql: "INSERT OR IGNORE INTO workers (id,name,role,active,sort) VALUES (?,?,?,1,?)", args: [w.id, w.name, w.role, i] }));
   seedReviews.forEach((r, i) => stmts.push({ sql: "INSERT INTO reviews (name,rating,text,source,sort) VALUES (?,?,?,?,?)", args: [r.name, r.rating, r.text, r.source ?? "", i] }));
   seedProducts.forEach((p, i) => stmts.push({ sql: "INSERT OR IGNORE INTO products (slug,name,description,price,image,active,sort) VALUES (?,?,?,?,?,?,?)", args: [p.slug, p.name, p.description, p.price, p.image, p.active ? 1 : 0, i] }));
-  seedNews.forEach((n, i) => stmts.push({ sql: "INSERT INTO news (tag,title,text,sort) VALUES (?,?,?,?)", args: [n.tag, n.title, n.text, i] }));
+  seedNews.forEach((n, i) => stmts.push({ sql: "INSERT INTO news (tag,title,text,image,sort) VALUES (?,?,?,?,?)", args: [n.tag, n.title, n.text, n.image ?? "", i] }));
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('gallery',?)", args: [JSON.stringify(seedGallery)] });
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('beforeAfter',?)", args: [JSON.stringify(seedBeforeAfter)] });
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('contact',?)", args: [JSON.stringify({ phone: "+34 977 23 84 38", email: "hola@almarizo.com", address: "Carrer de Bonaventura Hernández i Sanahuja, 19, 43002 Tarragona", instagram: "https://www.instagram.com/mimasbymaricruz/", tiktok: "https://www.tiktok.com/@mimasbymaricruz", whatsapp: "" })] });
@@ -235,8 +235,8 @@ type ReviewInput = { name: string; rating: number; text: string; source: string 
 export const replaceReviews = (items: ReviewInput[]) => replaceAll("reviews", "name,rating,text,source,sort", items.map((r, i) => [r.name, r.rating, r.text, r.source ?? "", i]));
 type ProductInput = { slug: string; name: string; description: string; price: number; image: string; active: boolean };
 export const replaceProducts = (items: ProductInput[]) => replaceAll("products", "slug,name,description,price,image,active,sort", items.map((p, i) => [p.slug, p.name, p.description, p.price, p.image, p.active ? 1 : 0, i]));
-type NewsInput = { tag: string; title: string; text: string };
-export const replaceNews = (items: NewsInput[]) => replaceAll("news", "tag,title,text,sort", items.map((n, i) => [n.tag, n.title, n.text, i]));
+type NewsInput = { tag: string; title: string; text: string; image?: string };
+export const replaceNews = (items: NewsInput[]) => replaceAll("news", "tag,title,text,image,sort", items.map((n, i) => [n.tag, n.title, n.text, n.image ?? "", i]));
 
 /* ---------- auth ---------- */
 export async function authenticate(email: string, password: string) {
