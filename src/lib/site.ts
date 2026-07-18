@@ -48,13 +48,25 @@ export const site = {
   mapsLink:
     "https://www.google.com/maps/search/?api=1&query=Carrer+de+Bonaventura+Hern%C3%A1ndez+i+Sanahuja+19+43002+Tarragona",
 
-  // Vídeo "cómo venir preparada" — se enseña tras reservar
-  prepVideoUrl: "", // ⚠️ PLACEHOLDER — pegar enlace de YouTube/IG/TikTok cuando esté
+  // Vídeo "cómo venir preparada" — se enseña tras reservar (abre el reel en Instagram)
+  prepVideoUrl: "https://www.instagram.com/reel/DaLkbr3syF9/",
 
-  // Vídeo de fondo del banner (portada). Cuando lo envíen, colocar el .mp4 en
-  // /public/videos/portada.mp4 y poner aquí "/videos/portada.mp4".
-  heroVideo: "", // ⚠️ PLACEHOLDER — vídeo de Instagram para el banner
-  heroVideoLink: "https://www.instagram.com/almarizo.studio/", // al pulsar el vídeo, se abre el IG del salón
+  // --- BANNER / PORTADA (slide 1) ---
+  // Tres columnas de vídeo vertical de fondo (sin sonido, en bucle), estilo editorial.
+  // Para cambiarlos: sustituir el .mp4 y su póster .jpg en /public/videos.
+  heroVideos: [
+    { src: "/videos/banner-ondulados.mp4", poster: "/videos/banner-ondulados.jpg", alt: "Definición de cabello ondulado en Alma Rizo" },
+    { src: "/videos/banner-afro.mp4", poster: "/videos/banner-afro.jpg", alt: "Método Alma Rizo en cabello afro" },
+    { src: "/videos/banner-tinturado.mp4", poster: "/videos/banner-tinturado.jpg", alt: "Color y método curly en Alma Rizo" },
+  ],
+
+  // --- CONTACTO (slide 3) ---
+  // Vídeo "cómo venir": al tocarlo se abre el reel concreto en Instagram.
+  comoVenir: {
+    src: "/videos/comovenir.mp4",
+    poster: "/videos/comovenir.jpg",
+    link: "https://www.instagram.com/reel/DaLkbr3syF9/",
+  },
 } as const;
 
 export type Service = {

@@ -44,3 +44,6 @@ next-env.d.ts
 /data
 .env*.local
 !.env.example
+
+# Vídeos fuente sin optimizar (no se despliegan)
+/media-src/

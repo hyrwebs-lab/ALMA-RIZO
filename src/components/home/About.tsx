@@ -14,11 +14,11 @@ export default function About() {
         <Reveal className="relative">
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
             <Image
-              src="/photos/real-salon.jpg"
-              alt="Maricruz en el salón Alma Rizo, Tarragona"
+              src="/photos/maricruz-sobre-mi.jpg"
+              alt="Maricruz trabajando el rizo en el salón Alma Rizo, Tarragona"
               fill
               sizes="(min-width:768px) 45vw, 100vw"
-              className="object-cover object-top"
+              className="object-cover object-center"
             />
           </div>
           <div className="absolute -left-3 -top-3 -z-0 hidden h-full w-full rounded-2xl border border-gold/50 md:block" />

@@ -2,13 +2,16 @@
 
 /* ===========================================================
    ALMA RIZO · Curly Studio — Brand design system
-   Colors sampled directly from the official logo files.
+   Colores muestreados de la GUÍA DE MARCA oficial (verde bosque
+   profundo + emerald del logo + oliva para overlays translúcidos).
    =========================================================== */
 @theme {
   /* Brand palette */
-  --color-brand: #183b32; /* verde oscuro */
-  --color-brand-deep: #102019; /* verde casi negro */
-  --color-brand-soft: #2c4f43; /* verde medio */
+  --color-brand: #123c2c; /* verde marca (emerald del círculo del logo) */
+  --color-brand-deep: #04231a; /* verde bosque profundo (fondos) — de la guía */
+  --color-brand-soft: #2a5142; /* verde medio */
+  --color-olive: #4a4a35; /* verde oliva (overlays translúcidos, efecto transparente) */
+  --color-olive-soft: #5b5f43; /* oliva claro */
   --color-cream: #f3e9db; /* beige principal */
   --color-cream-soft: #faf5ec; /* crema clara (fondos) */
   --color-cream-deep: #e9dcc8; /* beige más cálido */
