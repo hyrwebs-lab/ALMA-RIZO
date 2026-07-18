@@ -84,6 +84,18 @@ async function initDb(c: Client) {
     CREATE TABLE IF NOT EXISTS sessions (token TEXT PRIMARY KEY, email TEXT, role TEXT, name TEXT, expires INTEGER);
   `);
 
+  // Migraciones idempotentes: añaden columnas nuevas a BDs ya existentes (prod).
+  // CREATE TABLE IF NOT EXISTS no altera tablas ya creadas, así que las añadimos aquí.
+  // Debe ir ANTES del early-return de "ya sembrado" para ejecutarse también en prod.
+  const migrations: [string, string, string][] = [["news", "image", "TEXT"]];
+  for (const [table, col, type] of migrations) {
+    try {
+      await c.execute(`ALTER TABLE ${table} ADD COLUMN ${col} ${type}`);
+    } catch {
+      /* la columna ya existe — ignorar */
+    }
+  }
+
   const seeded = (await c.execute("SELECT COUNT(*) c FROM services")).rows[0].c as number;
   if (seeded > 0) return;
 
