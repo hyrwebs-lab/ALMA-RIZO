@@ -67,6 +67,17 @@ export const site = {
     poster: "/videos/comovenir.jpg",
     link: "https://www.instagram.com/reel/DaLkbr3syF9/",
   },
+
+  // --- MURO DE REELS ("Míranos en acción") ---
+  // Cada tarjeta abre el reel en Instagram. ⚠️ De momento reutiliza los vídeos
+  // del método; cuando envíen más reels, añadir aquí {src, poster, link} y su .mp4.
+  reels: [
+    { src: "/videos/banner-afro.mp4", poster: "/videos/banner-afro.jpg", link: "https://www.instagram.com/reel/DaLkbr3syF9/" },
+    { src: "/videos/comovenir.mp4", poster: "/videos/comovenir.jpg", link: "https://www.instagram.com/reel/DaLkbr3syF9/" },
+    { src: "/videos/banner-ondulados.mp4", poster: "/videos/banner-ondulados.jpg", link: "https://www.instagram.com/almarizo.studio/" },
+    { src: "/videos/banner-tinturado.mp4", poster: "/videos/banner-tinturado.jpg", link: "https://www.instagram.com/almarizo.studio/" },
+    { src: "/videos/banner-diagnostico.mp4", poster: "/videos/banner-diagnostico.jpg", link: "https://www.instagram.com/almarizo.studio/" },
+  ],
 } as const;
 
 export type Service = {

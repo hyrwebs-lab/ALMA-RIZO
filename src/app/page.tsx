@@ -1,11 +1,15 @@
 import Hero from "@/components/home/Hero";
+import TrustBadges from "@/components/home/TrustBadges";
 import Identify from "@/components/home/Identify";
 import Solution from "@/components/home/Solution";
+import ClaimMarquee from "@/components/home/ClaimMarquee";
 import ServicesPreview from "@/components/home/ServicesPreview";
+import Prep from "@/components/home/Prep";
 import Results from "@/components/home/Results";
 import About from "@/components/home/About";
 import ProductsPreview from "@/components/home/ProductsPreview";
 import Reviews from "@/components/home/Reviews";
+import ReelWall from "@/components/home/ReelWall";
 import Location from "@/components/home/Location";
 import Brands from "@/components/home/Brands";
 import FinalCTA from "@/components/home/FinalCTA";
@@ -68,13 +72,17 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Hero news={news} />
+      <TrustBadges />
       <Identify />
       <Solution />
+      <ClaimMarquee />
       <ServicesPreview services={services} />
+      <Prep />
       <Results />
       <About />
       <ProductsPreview products={products} />
       <Reviews reviews={reviews} />
+      <ReelWall />
       <Location />
       <Brands />
       <FinalCTA />
