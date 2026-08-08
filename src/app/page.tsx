@@ -7,21 +7,19 @@ import ServicesPreview from "@/components/home/ServicesPreview";
 import Prep from "@/components/home/Prep";
 import Results from "@/components/home/Results";
 import About from "@/components/home/About";
-import ProductsPreview from "@/components/home/ProductsPreview";
 import Reviews from "@/components/home/Reviews";
 import ReelWall from "@/components/home/ReelWall";
 import Location from "@/components/home/Location";
 import Brands from "@/components/home/Brands";
 import FinalCTA from "@/components/home/FinalCTA";
 import { site } from "@/lib/site";
-import { getServices, getProducts, getReviews, getNews } from "@/lib/content";
+import { getServices, getReviews, getNews } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [services, products, reviews, news] = await Promise.all([
+  const [services, reviews, news] = await Promise.all([
     getServices(),
-    getProducts(),
     getReviews(),
     getNews(),
   ]);
@@ -80,7 +78,6 @@ export default async function Home() {
       <Prep />
       <Results />
       <About />
-      <ProductsPreview products={products} />
       <Reviews reviews={reviews} />
       <ReelWall />
       <Location />

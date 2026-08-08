@@ -20,7 +20,7 @@ export const site = {
     phone: "+34 977 23 84 38",
     phoneHref: "+34977238438",
     email: "hola@almarizo.com", // ⚠️ PLACEHOLDER — pedir correo real del negocio
-    whatsapp: "34977238438", // ⚠️ PLACEHOLDER — pedir nº de WhatsApp Business real
+    whatsapp: "34629487614", // nº de WhatsApp del salón (+34 629 48 76 14)
     whatsappMsg: "¡Hola Alma Rizo! Me gustaría pedir información / reservar cita 🌿",
   },
 
@@ -308,7 +308,6 @@ export const nav = [
   { label: "Inicio", href: "/" },
   { label: "Servicios", href: "/servicios" },
   { label: "Transformaciones", href: "/galeria" },
-  { label: "Productos", href: "/productos" },
   { label: "Sobre mí", href: "/sobre-mi" },
   { label: "Contacto", href: "/contacto" },
 ];

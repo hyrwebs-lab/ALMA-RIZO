@@ -9,7 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/reservar", freq: "monthly", pri: 0.9 },
     { path: "/metodo", freq: "monthly", pri: 0.8 },
     { path: "/galeria", freq: "weekly", pri: 0.8 },
-    { path: "/productos", freq: "monthly", pri: 0.7 },
     { path: "/sobre-mi", freq: "monthly", pri: 0.7 },
     { path: "/contacto", freq: "monthly", pri: 0.7 },
     { path: "/consejos", freq: "monthly", pri: 0.6 },

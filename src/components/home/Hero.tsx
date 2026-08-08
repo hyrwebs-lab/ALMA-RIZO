@@ -191,7 +191,6 @@ function Novedades({ news }: { news: News[] }) {
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-cream/85 line-clamp-3 sm:text-base">{featured.text}</p>
           <div className="mt-7 flex flex-wrap justify-center gap-3 sm:mt-8">
             <ButtonLink href="/reservar" variant="gold" size="md">{t.cta.reservarAhora}</ButtonLink>
-            <ButtonLink href="/productos" variant="outlineLight" size="md">{t.cta.verProductos}</ButtonLink>
           </div>
           </div>
         </div>

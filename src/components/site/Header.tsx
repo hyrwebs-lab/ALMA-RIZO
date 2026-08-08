@@ -47,7 +47,6 @@ export default function Header() {
       "/": t.nav.inicio,
       "/servicios": t.nav.servicios,
       "/galeria": t.nav.transformaciones,
-      "/productos": t.nav.productos,
       "/sobre-mi": t.nav.sobremi,
       "/contacto": t.nav.contacto,
     })[href] ?? "";
