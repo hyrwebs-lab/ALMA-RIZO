@@ -1,0 +1,9 @@
+node_modules
+.git
+.vercel
+.next
+data
+media-src
+.env
+.env.local
+*.log

@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Vídeos fuente sin optimizar (no se despliegan)
 /media-src/
+
+.vercel
+.env*
