@@ -8,7 +8,7 @@ const base =
   "inline-flex items-center justify-center gap-2 font-sans font-medium uppercase tracking-[0.16em] text-[0.72rem] transition-all duration-300 rounded-full cursor-pointer disabled:opacity-50 disabled:pointer-events-none";
 
 const variants: Record<Variant, string> = {
-  gold: "bg-gold text-brand-deep hover:bg-gold-soft shadow-[0_8px_24px_-12px_rgba(200,168,104,0.9)]",
+  gold: "bg-gold text-ink hover:bg-gold-soft shadow-[0_8px_24px_-12px_rgba(200,168,104,0.9)]",
   solid: "bg-brand text-cream hover:bg-brand-soft",
   outline:
     "border border-brand/40 text-brand hover:bg-brand hover:text-cream",

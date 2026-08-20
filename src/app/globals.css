@@ -6,10 +6,10 @@
    profundo + emerald del logo + oliva para overlays translúcidos).
    =========================================================== */
 @theme {
-  /* Brand palette */
-  --color-brand: #123c2c; /* verde marca (emerald del círculo del logo) */
-  --color-brand-deep: #04231a; /* verde bosque profundo (fondos) — de la guía */
-  --color-brand-soft: #2a5142; /* verde medio */
+  /* Brand palette — verde SALVIA elegido por la clienta (#688b5e), opción A */
+  --color-brand: #557a4a; /* salvia profundo (footer, secciones, títulos — legible) */
+  --color-brand-deep: #688b5e; /* salvia principal (portada, CTA — color de la clienta) */
+  --color-brand-soft: #7d9a72; /* salvia claro */
   --color-olive: #4a4a35; /* verde oliva (overlays translúcidos, efecto transparente) */
   --color-olive-soft: #5b5f43; /* oliva claro */
   --color-cream: #f3e9db; /* beige principal */

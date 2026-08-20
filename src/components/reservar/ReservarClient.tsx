@@ -177,7 +177,7 @@ export default function ReservarClient() {
           <li key={label} className="flex items-center gap-2">
             <span
               className={`flex h-7 w-7 items-center justify-center rounded-full text-[0.7rem] font-medium transition-colors ${
-                i < step ? "bg-gold text-brand-deep" : i === step ? "bg-brand text-cream" : "bg-brand/10 text-ink-soft"
+                i < step ? "bg-gold text-ink" : i === step ? "bg-brand text-cream" : "bg-brand/10 text-ink-soft"
               }`}
             >
               {i < step ? "✓" : i + 1}

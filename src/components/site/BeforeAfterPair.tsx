@@ -20,7 +20,7 @@ export default function BeforeAfterPair({
         </div>
         <div className="relative aspect-[3/4] bg-cream">
           <Image src={after} alt="Después" fill sizes="(min-width:768px) 22vw, 45vw" className="object-cover" />
-          <span className="absolute right-2 top-2 bg-gold px-2.5 py-1 text-[0.6rem] uppercase tracking-widest text-brand-deep">
+          <span className="absolute right-2 top-2 bg-gold px-2.5 py-1 text-[0.6rem] uppercase tracking-widest text-ink">
             Después
           </span>
         </div>

@@ -279,7 +279,7 @@ function ComoVenirCard({ active }: { active: boolean }) {
       <div className="absolute inset-0 bg-gradient-to-t from-brand-deep/70 via-transparent to-brand-deep/10" />
       {/* Botón play */}
       <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-cream/15 backdrop-blur-md ring-1 ring-cream/40 transition-colors group-hover:bg-gold/90">
-        <svg viewBox="0 0 24 24" className="ml-0.5 h-6 w-6 text-cream group-hover:text-brand-deep" fill="currentColor" aria-hidden><path d="M8 5v14l11-7z" /></svg>
+        <svg viewBox="0 0 24 24" className="ml-0.5 h-6 w-6 text-cream group-hover:text-ink" fill="currentColor" aria-hidden><path d="M8 5v14l11-7z" /></svg>
       </span>
       {/* Etiqueta inferior */}
       <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 px-3 py-3 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-cream">

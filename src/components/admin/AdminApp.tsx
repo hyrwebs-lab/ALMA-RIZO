@@ -345,7 +345,7 @@ function Reservas({ role }: { role: Role }) {
             <button onClick={() => setMode("calendario")} className={`px-3.5 py-1.5 transition-colors ${mode === "calendario" ? "bg-brand text-cream" : "bg-white text-ink-soft hover:text-brand"}`}>Calendario</button>
             <button onClick={() => setMode("lista")} className={`px-3.5 py-1.5 transition-colors ${mode === "lista" ? "bg-brand text-cream" : "bg-white text-ink-soft hover:text-brand"}`}>Lista</button>
           </div>
-          <button onClick={() => setAdd({ open: true, date: day })} className="rounded-full bg-gold px-4 py-1.5 text-sm font-medium text-brand-deep transition-colors hover:bg-gold-soft">+ Añadir cita</button>
+          <button onClick={() => setAdd({ open: true, date: day })} className="rounded-full bg-gold px-4 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-gold-soft">+ Añadir cita</button>
         </div>
       </div>
 
@@ -648,7 +648,7 @@ function AddCitaModal({ services, workers, defaultDate, presetWorkerId, presetTi
         {error && <p className="rounded bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
         <div className="flex justify-end gap-2 pt-1">
           <button onClick={onClose} className="rounded-full border border-brand/20 px-4 py-2 text-sm text-ink-soft transition-colors hover:text-brand">Cancelar</button>
-          <button onClick={submit} disabled={saving} className="rounded-full bg-gold px-5 py-2 text-sm font-medium text-brand-deep transition-colors hover:bg-gold-soft disabled:opacity-60">{saving ? "Guardando…" : "Crear cita"}</button>
+          <button onClick={submit} disabled={saving} className="rounded-full bg-gold px-5 py-2 text-sm font-medium text-ink transition-colors hover:bg-gold-soft disabled:opacity-60">{saving ? "Guardando…" : "Crear cita"}</button>
         </div>
       </div>
     </ModalShell>
