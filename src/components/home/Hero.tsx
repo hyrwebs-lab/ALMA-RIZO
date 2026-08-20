@@ -179,7 +179,7 @@ function Novedades({ news }: { news: News[] }) {
         <div className="overflow-hidden rounded-[1.6rem] border border-cream/15 bg-brand-deep/40 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.7)] backdrop-blur-md sm:rounded-[2.2rem]">
           {featured.image && (
             <div className="relative h-40 w-full sm:h-56">
-              <Image src={featured.image} alt={featured.title} fill sizes="(min-width:640px) 42rem, 90vw" className="object-cover" />
+              <Image src={featured.image} alt={featured.title} fill sizes="(min-width:640px) 42rem, 90vw" className="object-cover object-[center_28%]" />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-deep/70 to-transparent" />
             </div>
           )}
