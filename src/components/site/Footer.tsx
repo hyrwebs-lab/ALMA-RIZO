@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { nav, site } from "@/lib/site";
-import { telUrl, whatsappUrl } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
+import { useLinks } from "@/lib/contact";
 import {
   InstagramIcon,
   TikTokIcon,
@@ -14,8 +14,15 @@ import {
   ClockIcon,
 } from "@/components/ui/Icons";
 
+/** Saca el @usuario de una URL de Instagram o TikTok. */
+function handle(url: string) {
+  const last = url.replace(/\/+$/, "").split("/").pop() ?? "";
+  return last.startsWith("@") ? last : `@${last}`;
+}
+
 export default function Footer() {
   const t = useT();
+  const { contact, tel, wa } = useLinks();
   const label = (href: string): string =>
     ({
       "/": t.nav.inicio,
@@ -51,22 +58,22 @@ export default function Footer() {
             <li className="flex gap-3">
               <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
               <span>
-                {site.contact.address}
+                {contact.address}
                 <br />
-                {site.contact.postalCode} {site.contact.cityRegion}
+                {contact.postalCode} {contact.cityRegion}
               </span>
             </li>
             <li>
-              <a href={telUrl()} className="flex gap-3 transition-colors hover:text-gold">
+              <a href={tel} className="flex gap-3 transition-colors hover:text-gold">
                 <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                {site.contact.phone}
+                {contact.phone}
               </a>
             </li>
             <li>
-              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="flex gap-3 transition-colors hover:text-gold">
+              <a href={wa()} target="_blank" rel="noopener noreferrer" className="flex gap-3 transition-colors hover:text-gold">
                 <WhatsAppIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                 <span>
-                  {site.contact.phone}
+                  {contact.phone}
                   <span className="block text-cream/60">También por WhatsApp</span>
                 </span>
               </a>
@@ -88,24 +95,30 @@ export default function Footer() {
               Somos mucha comunidad rizada. Únete y no te pierdas nada 🌿
             </p>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li>
-                <a href={site.social.instagramPersonal} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
-                  <InstagramIcon className="h-5 w-5 shrink-0 text-gold" />
-                  <span>@mimasbymaricruz <span className="text-cream/60">· la comunidad de Maricruz</span></span>
-                </a>
-              </li>
-              <li>
-                <a href={site.social.tiktok} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
-                  <TikTokIcon className="h-5 w-5 shrink-0 text-gold" />
-                  <span>@mimasbymaricruz <span className="text-cream/60">· TikTok</span></span>
-                </a>
-              </li>
-              <li>
-                <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
-                  <InstagramIcon className="h-5 w-5 shrink-0 text-gold" />
-                  <span>@almarizo.studio <span className="text-cream/60">· el salón</span></span>
-                </a>
-              </li>
+              {contact.instagramPersonal && (
+                <li>
+                  <a href={contact.instagramPersonal} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
+                    <InstagramIcon className="h-5 w-5 shrink-0 text-gold" />
+                    <span>{handle(contact.instagramPersonal)} <span className="text-cream/60">· la comunidad de Maricruz</span></span>
+                  </a>
+                </li>
+              )}
+              {contact.tiktok && (
+                <li>
+                  <a href={contact.tiktok} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
+                    <TikTokIcon className="h-5 w-5 shrink-0 text-gold" />
+                    <span>{handle(contact.tiktok)} <span className="text-cream/60">· TikTok</span></span>
+                  </a>
+                </li>
+              )}
+              {contact.instagram && (
+                <li>
+                  <a href={contact.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
+                    <InstagramIcon className="h-5 w-5 shrink-0 text-gold" />
+                    <span>{handle(contact.instagram)} <span className="text-cream/60">· el salón</span></span>
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

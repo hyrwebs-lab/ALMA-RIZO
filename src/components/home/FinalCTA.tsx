@@ -5,10 +5,12 @@ import Reveal from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 import { WhatsAppIcon, ArrowIcon } from "@/components/ui/Icons";
 import { whatsappUrl } from "@/lib/utils";
+import { useLinks } from "@/lib/contact";
 import { useT } from "@/lib/i18n";
 
 export default function FinalCTA() {
   const t = useT();
+  const { wa } = useLinks();
   return (
     <section className="relative overflow-hidden bg-brand-deep py-24 text-cream md:py-32">
       <Image
@@ -34,7 +36,7 @@ export default function FinalCTA() {
           <ButtonLink href="/reservar" variant="gold" size="lg">
             {t.cta.reservarCorto} <ArrowIcon className="h-4 w-4" />
           </ButtonLink>
-          <ButtonLink href={whatsappUrl()} variant="outlineLight" size="lg" external>
+          <ButtonLink href={wa()} variant="outlineLight" size="lg" external>
             <WhatsAppIcon className="h-4 w-4" /> WhatsApp
           </ButtonLink>
         </div>

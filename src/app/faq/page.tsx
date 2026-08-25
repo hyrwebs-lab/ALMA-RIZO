@@ -5,7 +5,8 @@ import Accordion from "@/components/site/Accordion";
 import { ButtonLink } from "@/components/ui/Button";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 import { faq } from "@/lib/site";
-import { whatsappUrl } from "@/lib/utils";
+import { waHref } from "@/lib/site";
+import { getContact } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Preguntas frecuentes · Cabello rizado en Tarragona",
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
     "Resolvemos tus dudas sobre el método curly, el corte en seco, cómo venir a tu cita y cómo cuidar tu rizo en casa.",
 };
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const contact = await getContact();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -43,7 +45,7 @@ export default function FaqPage() {
             <p className="text-ink-soft">¿No encuentras tu respuesta?</p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
               <ButtonLink href="/reservar" variant="gold" size="md">Reservar cita</ButtonLink>
-              <ButtonLink href={whatsappUrl()} variant="outline" size="md" external>
+              <ButtonLink href={waHref(contact)} variant="outline" size="md" external>
                 <WhatsAppIcon className="h-4 w-4" /> Preguntar por WhatsApp
               </ButtonLink>
             </div>

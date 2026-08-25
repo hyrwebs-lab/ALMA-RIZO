@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { formatDuration, formatPrice, whatsappUrl } from "@/lib/utils";
+import { formatDuration, formatPrice } from "@/lib/utils";
+import { useLinks } from "@/lib/contact";
+import Calendar from "@/components/reservar/Calendar";
 import { site } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
 import { ArrowIcon, WhatsAppIcon } from "@/components/ui/Icons";
@@ -13,18 +15,6 @@ type Svc = { slug: string; name: string; tagline: string; description: string; d
 
 const STEPS = ["Servicio", "Estilista", "Fecha y hora", "Tus datos", "Confirmar"];
 
-function upcomingDates(count = 21) {
-  const out: Date[] = [];
-  const today = new Date();
-  for (let i = 0; i < 70 && out.length < count; i++) {
-    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
-    if (d.getDay() !== 0) out.push(d); // domingo cerrado
-  }
-  return out;
-}
-function ymd(d: Date) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
 function prettyDate(dStr: string) {
   const d = new Date(dStr + "T00:00:00");
   return d.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
@@ -33,6 +23,7 @@ function prettyDate(dStr: string) {
 export default function ReservarClient() {
   const params = useSearchParams();
   const preselect = params.get("servicio");
+  const { wa } = useLinks();
 
   const [step, setStep] = useState(0);
   const [serviceSlug, setServiceSlug] = useState<string | null>(preselect);
@@ -59,7 +50,6 @@ export default function ReservarClient() {
   }, []);
 
   const service = services.find((s) => s.slug === serviceSlug) || null;
-  const dates = useMemo(() => upcomingDates(), []);
 
   useEffect(() => {
     if (!date || !service) {
@@ -159,7 +149,7 @@ export default function ReservarClient() {
         </div>
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <a href={whatsappUrl(`Hola, acabo de reservar ${service?.name} para el ${prettyDate(date)} a las ${time}.`)} target="_blank" rel="noopener noreferrer">
+          <a href={wa(`Hola, acabo de reservar ${service?.name} para el ${prettyDate(date)} a las ${time}.`)} target="_blank" rel="noopener noreferrer">
             <Button variant="gold" size="md"><WhatsAppIcon className="h-4 w-4" /> Escribir por WhatsApp</Button>
           </a>
           <Link href="/"><Button variant="outline" size="md">Volver al inicio</Button></Link>
@@ -233,24 +223,8 @@ export default function ReservarClient() {
             <h2 className="font-display text-3xl text-brand">Fecha y hora</h2>
             <p className="mt-1 text-sm text-ink-soft">Domingos cerrado. Horarios según disponibilidad.</p>
             {error && <p className="mt-3 rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
-            <div className="mt-5 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {dates.map((d) => {
-                const ds = ymd(d);
-                const sel = ds === date;
-                return (
-                  <button
-                    key={ds}
-                    onClick={() => { setDate(ds); setTime(""); }}
-                    className={`flex shrink-0 flex-col items-center rounded-xl border px-4 py-3 transition-all ${
-                      sel ? "border-gold bg-brand text-cream" : "border-brand/15 hover:border-brand/40"
-                    }`}
-                  >
-                    <span className="text-[0.65rem] uppercase tracking-wide opacity-70">{d.toLocaleDateString("es-ES", { weekday: "short" })}</span>
-                    <span className="font-display text-xl">{d.getDate()}</span>
-                    <span className="text-[0.65rem] opacity-70">{d.toLocaleDateString("es-ES", { month: "short" })}</span>
-                  </button>
-                );
-              })}
+            <div className="mt-5">
+              <Calendar value={date} onChange={(ds) => { setDate(ds); setTime(""); }} />
             </div>
 
             {date && (

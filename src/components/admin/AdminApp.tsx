@@ -992,9 +992,15 @@ function AjustesEditor() {
         {field("email", "Email")}
         {field("address", "Dirección")}
         {field("whatsapp", "WhatsApp")}
-        {field("instagram", "Instagram")}
+        {field("instagram", "Instagram del salón")}
+        {field("instagramPersonal", "Instagram de Maricruz")}
         {field("tiktok", "TikTok")}
       </div>
+      <p className="mt-5 rounded-xl bg-brand/5 p-4 text-xs leading-relaxed text-ink-soft">
+        Lo que guardes aquí se actualiza en toda la web: teléfono, botones de llamar
+        y WhatsApp, pie de página y redes sociales. Si dejas el WhatsApp vacío se usa
+        el mismo número de teléfono.
+      </p>
     </div>
   );
 }

@@ -3,7 +3,8 @@ import PageHero from "@/components/site/PageHero";
 import Reveal from "@/components/ui/Reveal";
 import ContactForm from "@/components/site/ContactForm";
 import { site } from "@/lib/site";
-import { telUrl, whatsappUrl } from "@/lib/utils";
+import { telHref, waHref } from "@/lib/site";
+import { getContact } from "@/lib/content";
 import {
   MapPinIcon,
   ClockIcon,
@@ -19,7 +20,8 @@ export const metadata: Metadata = {
     "Encuéntranos en Tarragona. Dirección, horarios, teléfono y WhatsApp de Alma Rizo, especialistas en cabello rizado.",
 };
 
-export default function ContactoPage() {
+export default async function ContactoPage() {
+  const contact = await getContact();
   return (
     <>
       <PageHero
@@ -36,9 +38,9 @@ export default function ContactoPage() {
               <li className="flex gap-4">
                 <MapPinIcon className="mt-1 h-5 w-5 shrink-0 text-gold" />
                 <span>
-                  {site.contact.address}
+                  {contact.address}
                   <br />
-                  {site.contact.postalCode} {site.contact.cityRegion}
+                  {contact.postalCode} {contact.cityRegion}
                 </span>
               </li>
               <li className="flex gap-4">
@@ -53,25 +55,25 @@ export default function ContactoPage() {
               </li>
               <li className="flex gap-4">
                 <PhoneIcon className="mt-1 h-5 w-5 shrink-0 text-gold" />
-                <a href={telUrl()} className="transition-colors hover:text-gold">
-                  {site.contact.phone}
+                <a href={telHref(contact)} className="transition-colors hover:text-gold">
+                  {contact.phone}
                 </a>
               </li>
             </ul>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] px-4 py-2.5 text-xs font-medium uppercase tracking-widest text-white transition-opacity hover:opacity-90">
+              <a href={waHref(contact)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] px-4 py-2.5 text-xs font-medium uppercase tracking-widest text-white transition-opacity hover:opacity-90">
                 <WhatsAppIcon className="h-4 w-4" /> WhatsApp
               </a>
-              <a href={site.social.instagramPersonal} target="_blank" rel="noopener noreferrer" aria-label="Instagram de Maricruz" className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand/20 text-brand transition-colors hover:border-gold hover:text-gold">
+              <a href={contact.instagramPersonal} target="_blank" rel="noopener noreferrer" aria-label="Instagram de Maricruz" className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand/20 text-brand transition-colors hover:border-gold hover:text-gold">
                 <InstagramIcon className="h-5 w-5" />
               </a>
-              <a href={site.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand/20 text-brand transition-colors hover:border-gold hover:text-gold">
+              <a href={contact.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand/20 text-brand transition-colors hover:border-gold hover:text-gold">
                 <TikTokIcon className="h-5 w-5" />
               </a>
             </div>
             <p className="mt-3 text-sm text-ink-soft">
-              ¿Prefieres escribir? Mándanos un <strong className="font-medium text-brand">WhatsApp</strong> al {site.contact.phone} y te respondemos encantadas.
+              ¿Prefieres escribir? Mándanos un <strong className="font-medium text-brand">WhatsApp</strong> al {contact.phone} y te respondemos encantadas.
             </p>
 
             <div className="mt-8 overflow-hidden border border-brand/10">

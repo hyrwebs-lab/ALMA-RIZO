@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/site/PageHero";
 import Prose from "@/components/site/Prose";
 import { legal, site } from "@/lib/site";
+import { getContact } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Aviso legal",
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-export default function AvisoLegalPage() {
+export default async function AvisoLegalPage() {
+  const contact = await getContact();
   return (
     <>
       <PageHero eyebrow="Información legal" title="Aviso legal" />
@@ -26,7 +28,7 @@ export default function AvisoLegalPage() {
           <li><strong>NIF/CIF:</strong> {legal.nif}</li>
           <li><strong>Domicilio:</strong> {legal.addressFull}</li>
           <li><strong>Correo electrónico:</strong> {legal.email}</li>
-          <li><strong>Teléfono:</strong> {site.contact.phone}</li>
+          <li><strong>Teléfono:</strong> {contact.phone}</li>
           <li><strong>Actividad:</strong> {legal.activity}</li>
         </ul>
 

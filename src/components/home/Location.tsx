@@ -4,11 +4,13 @@ import Reveal from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 import { MapPinIcon, ClockIcon, PhoneIcon, ArrowIcon } from "@/components/ui/Icons";
 import { site } from "@/lib/site";
+import { useLinks } from "@/lib/contact";
 import { telUrl } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 
 export default function Location() {
   const t = useT();
+  const { contact, tel } = useLinks();
   return (
     <section id="ubicacion" className="bg-cream-soft py-20 md:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 sm:px-8 md:grid-cols-2 md:gap-16">
@@ -22,9 +24,9 @@ export default function Location() {
             <li className="flex gap-4">
               <MapPinIcon className="mt-1 h-5 w-5 shrink-0 text-gold" />
               <span>
-                {site.contact.address}
+                {contact.address}
                 <br />
-                {site.contact.postalCode} {site.contact.cityRegion}
+                {contact.postalCode} {contact.cityRegion}
               </span>
             </li>
             <li className="flex gap-4">
@@ -39,8 +41,8 @@ export default function Location() {
             </li>
             <li className="flex gap-4">
               <PhoneIcon className="mt-1 h-5 w-5 shrink-0 text-gold" />
-              <a href={telUrl()} className="transition-colors hover:text-gold">
-                {site.contact.phone}
+              <a href={tel} className="transition-colors hover:text-gold">
+                {contact.phone}
               </a>
             </li>
           </ul>

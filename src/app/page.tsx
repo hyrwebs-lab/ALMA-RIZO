@@ -13,7 +13,7 @@ import Location from "@/components/home/Location";
 import Brands from "@/components/home/Brands";
 import FinalCTA from "@/components/home/FinalCTA";
 import { site } from "@/lib/site";
-import { getServices, getReviews, getNews } from "@/lib/content";
+import { getServices, getReviews, getNews, getContact } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +23,7 @@ export default async function Home() {
     getReviews(),
     getNews(),
   ]);
+  const contact = await getContact();
 
   const shownReviews = reviews.filter((r) => r.rating >= 4.5);
   const avgRating = shownReviews.length
@@ -39,19 +40,19 @@ export default async function Home() {
     logo: "https://almarizo.com/logos/logo-green.png",
     address: {
       "@type": "PostalAddress",
-      streetAddress: site.contact.address,
-      postalCode: site.contact.postalCode,
-      addressLocality: site.contact.cityRegion,
+      streetAddress: contact.address,
+      postalCode: contact.postalCode,
+      addressLocality: contact.cityRegion,
       addressRegion: "Tarragona",
       addressCountry: "ES",
     },
     geo: { "@type": "GeoCoordinates", latitude: 41.118, longitude: 1.245 },
-    telephone: site.contact.phoneHref,
+    telephone: contact.phoneHref,
     url: "https://almarizo.com",
     areaServed: "Tarragona",
     priceRange: "€€",
     currenciesAccepted: "EUR",
-    sameAs: [site.social.instagram, site.social.instagramPersonal, site.social.tiktok],
+    sameAs: [contact.instagram, contact.instagramPersonal, contact.tiktok].filter(Boolean),
     hasMap: site.mapsLink,
     openingHoursSpecification: [
       { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday"], opens: "09:30", closes: "18:30" },

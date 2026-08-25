@@ -1,7 +1,7 @@
 import "server-only";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as db from "./db";
-import type { Service, Product, Review, News } from "./site";
+import { mergeContact, type Contact, type Service, type Product, type Review, type News } from "./site";
 
 // Server-side readers that map DB rows to the public content shapes.
 // Used by the public (server) pages so the site reflects admin edits.
@@ -44,4 +44,9 @@ export async function getGallery(): Promise<{ src: string; alt: string; real?: b
 
 export async function getBeforeAfter(): Promise<{ before: string; after: string; label: string }[]> {
   return (await db.getSetting("beforeAfter")) ?? [];
+}
+
+/** Datos de contacto y redes tal y como estén guardados en el panel. */
+export async function getContact(): Promise<Contact> {
+  return mergeContact((await db.getSetting("contact")) as Record<string, unknown> | null);
 }

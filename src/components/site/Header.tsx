@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { nav, site } from "@/lib/site";
-import { cn, telUrl } from "@/lib/utils";
+import { nav } from "@/lib/site";
+import { cn } from "@/lib/utils";
+import { useLinks } from "@/lib/contact";
 import {
   PhoneIcon,
   InstagramIcon,
@@ -43,6 +44,7 @@ export default function Header() {
 
   const overHero = pathname === "/" && !scrolled;
   const t = useT();
+  const { contact, tel } = useLinks();
   const label = (href: string): string =>
     ({
       "/": t.nav.inicio,
@@ -105,7 +107,7 @@ export default function Header() {
         {/* Right actions */}
         <div className="flex items-center justify-self-end gap-2 sm:gap-3">
           <a
-            href={site.social.instagramPersonal}
+            href={contact.instagramPersonal}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
@@ -117,7 +119,7 @@ export default function Header() {
             <InstagramIcon className="h-5 w-5" />
           </a>
           <a
-            href={site.social.tiktok}
+            href={contact.tiktok}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="TikTok"
@@ -136,7 +138,7 @@ export default function Header() {
             <CalendarIcon className="h-4 w-4" /> {t.cta.reserva}
           </ButtonLink>
           <ButtonLink
-            href={telUrl()}
+            href={tel}
             variant={overHero ? "outlineLight" : "outline"}
             size="sm"
             external
@@ -206,13 +208,13 @@ export default function Header() {
             <LanguageSwitcher light />
           </div>
           <div className="mt-4 flex items-center gap-6 text-cream/80">
-            <a href={site.social.instagramPersonal} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href={contact.instagramPersonal} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <InstagramIcon className="h-6 w-6" />
             </a>
-            <a href={site.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <a href={contact.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok">
               <TikTokIcon className="h-6 w-6" />
             </a>
-            <a href={telUrl()} aria-label="Llamar">
+            <a href={tel} aria-label="Llamar">
               <PhoneIcon className="h-6 w-6" />
             </a>
           </div>

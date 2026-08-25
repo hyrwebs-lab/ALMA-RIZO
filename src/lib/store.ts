@@ -61,6 +61,7 @@ export type Settings = {
   email: string;
   address: string;
   instagram: string;
+  instagramPersonal: string;
   tiktok: string;
   whatsapp: string;
 };
@@ -152,9 +153,10 @@ function seed(): DataShape {
       phone: "+34 629 48 76 14",
       email: "hola@almarizo.com",
       address: "Carrer de Bonaventura Hernández i Sanahuja, 19, 43002 Tarragona",
-      instagram: "https://www.instagram.com/mimasbymaricruz/",
+      instagram: "https://www.instagram.com/almarizo.studio/",
+      instagramPersonal: "https://www.instagram.com/mimasbymaricruz",
       tiktok: "https://www.tiktok.com/@mimasbymaricruz",
-      whatsapp: "",
+      whatsapp: "34629487614",
     },
   };
 }

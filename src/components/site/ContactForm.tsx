@@ -4,12 +4,14 @@ import { useState } from "react";
 import { addMessage } from "@/lib/store";
 import { Button } from "@/components/ui/Button";
 import { whatsappUrl } from "@/lib/utils";
+import { useLinks } from "@/lib/contact";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 
 const inputCls =
   "w-full border border-brand/20 bg-cream-soft px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-gold";
 
 export default function ContactForm() {
+  const { wa } = useLinks();
   const [form, setForm] = useState({ name: "", email: "", phone: "", text: "" });
   const [sent, setSent] = useState(false);
 
@@ -37,7 +39,7 @@ export default function ContactForm() {
         <p className="mt-2 text-sm text-ink-soft">
           Te responderemos lo antes posible. Si prefieres, escríbenos directamente por WhatsApp.
         </p>
-        <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block">
+        <a href={wa()} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block">
           <Button variant="gold" size="sm"><WhatsAppIcon className="h-4 w-4" /> Abrir WhatsApp</Button>
         </a>
       </div>

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { whatsappUrl } from "@/lib/utils";
+import { useLinks } from "@/lib/contact";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 
 export default function WhatsAppFloat() {
   const [show, setShow] = useState(false);
+  const { wa } = useLinks();
 
   useEffect(() => {
     const t = setTimeout(() => setShow(true), 900);
@@ -14,7 +15,7 @@ export default function WhatsAppFloat() {
 
   return (
     <a
-      href={whatsappUrl()}
+      href={wa()}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Escríbenos por WhatsApp"

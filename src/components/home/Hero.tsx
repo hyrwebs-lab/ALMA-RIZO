@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/Button";
 import { PhoneIcon, ArrowIcon, WhatsAppIcon, ClockIcon } from "@/components/ui/Icons";
-import { telUrl, whatsappUrl } from "@/lib/utils";
 import { site, news as seedNews, type News } from "@/lib/site";
+import { useLinks } from "@/lib/contact";
 import { useT } from "@/lib/i18n";
 
 // Duración en pantalla de cada diapositiva (ms). Novedades dura más (hay que leerla).
@@ -146,6 +146,7 @@ function Slide({ active, children }: { active: boolean; children: React.ReactNod
 /* ---------- SLIDE 1: PORTADA ---------- */
 function Portada() {
   const t = useT();
+  const { tel } = useLinks();
   return (
     <div className="pointer-events-none relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-6 text-center sm:px-8">
       <h1 className="sr-only">Alma Rizo · {t.hero.subtitle}</h1>
@@ -153,7 +154,7 @@ function Portada() {
       <p className="mx-auto mt-6 max-w-xl text-lg text-cream/90 drop-shadow sm:text-xl">{t.hero.subtitle}</p>
       <div className="pointer-events-auto mt-9 flex flex-wrap items-center justify-center gap-4">
         <ButtonLink href="/reservar" variant="gold" size="lg">{t.cta.reservar} <ArrowIcon className="h-4 w-4" /></ButtonLink>
-        <ButtonLink href={telUrl()} variant="outlineLight" size="lg" external><PhoneIcon className="h-4 w-4" /> {t.cta.llamar}</ButtonLink>
+        <ButtonLink href={tel} variant="outlineLight" size="lg" external><PhoneIcon className="h-4 w-4" /> {t.cta.llamar}</ButtonLink>
       </div>
     </div>
   );
@@ -215,6 +216,7 @@ function Novedades({ news }: { news: News[] }) {
 /* ---------- SLIDE 3: CONTACTO + VÍDEO "CÓMO VENIR" ---------- */
 function Contacto({ active }: { active: boolean }) {
   const t = useT();
+  const { contact, tel, wa } = useLinks();
   const groups = [
     { days: "Lun · Mar · Mié", value: "9:30 – 18:30" },
     { days: "Jue · Vie", value: "9:30 – 19:30" },
@@ -227,7 +229,7 @@ function Contacto({ active }: { active: boolean }) {
         <p className="gold-rule eyebrow mb-5 justify-center text-gold lg:justify-start">{t.hero.contactoEyebrow}</p>
         <h2 className="font-display text-4xl leading-tight sm:text-5xl">{t.hero.contactoTitle}</h2>
         <p className="mx-auto mt-4 max-w-md text-cream/85 lg:mx-0">
-          {site.contact.address} · {site.contact.cityRegion}
+          {contact.address} · {contact.cityRegion}
         </p>
         <div className="mx-auto mt-6 flex max-w-md flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-cream/75 lg:mx-0 lg:justify-start">
           {groups.map((g) => (
@@ -238,8 +240,8 @@ function Contacto({ active }: { active: boolean }) {
         </div>
         <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
           <ButtonLink href="/reservar" variant="gold" size="lg">{t.cta.reservarCorto}</ButtonLink>
-          <ButtonLink href={telUrl()} variant="outlineLight" size="md" external><PhoneIcon className="h-4 w-4" /> {t.cta.llamar}</ButtonLink>
-          <ButtonLink href={whatsappUrl()} variant="outlineLight" size="md" external><WhatsAppIcon className="h-4 w-4" /> WhatsApp</ButtonLink>
+          <ButtonLink href={tel} variant="outlineLight" size="md" external><PhoneIcon className="h-4 w-4" /> {t.cta.llamar}</ButtonLink>
+          <ButtonLink href={wa()} variant="outlineLight" size="md" external><WhatsAppIcon className="h-4 w-4" /> WhatsApp</ButtonLink>
         </div>
       </div>
 

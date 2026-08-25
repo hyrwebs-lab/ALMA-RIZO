@@ -8,6 +8,8 @@ import WhatsAppFloat from "@/components/site/WhatsAppFloat";
 import HideOnAdmin from "@/components/site/HideOnAdmin";
 import CookieBanner from "@/components/site/CookieBanner";
 import { LanguageProvider } from "@/lib/i18n";
+import { ContactProvider } from "@/lib/contact";
+import { getContact } from "@/lib/content";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -70,15 +72,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Datos de contacto en vivo desde el panel de administración.
+  const contact = await getContact();
   return (
     <html
       lang="es"
       className={`${cormorant.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-cream-soft text-ink">
+        <ContactProvider value={contact}>
         <LanguageProvider>
         <HideOnAdmin>
           <Header />
@@ -94,6 +99,7 @@ export default function RootLayout({
           <CookieBanner />
         </HideOnAdmin>
         </LanguageProvider>
+        </ContactProvider>
       </body>
     </html>
   );

@@ -96,6 +96,35 @@ async function initDb(c: Client) {
     }
   }
 
+  // Datos de contacto: la semilla vieja guardó el fijo y una sola cuenta de IG.
+  // Como ahora la web lee estos valores, se refrescan una única vez (si la
+  // dueña ya los ha editado a otra cosa, no se tocan).
+  try {
+    const row = (await c.execute("SELECT value FROM settings WHERE key = 'contact'")).rows[0] as unknown as { value: string } | undefined;
+    if (row?.value) {
+      const cur = JSON.parse(row.value) as Record<string, unknown>;
+      const phone = typeof cur.phone === "string" ? cur.phone.replace(/\D/g, "") : "";
+      const stale = phone.endsWith("977238438");
+      if (stale || cur.instagramPersonal === undefined) {
+        const fixed = {
+          ...cur,
+          ...(stale
+            ? {
+                phone: "+34 629 48 76 14",
+                whatsapp: "34629487614",
+                instagram: "https://www.instagram.com/almarizo.studio/",
+              }
+            : {}),
+          instagramPersonal: cur.instagramPersonal ?? "https://www.instagram.com/mimasbymaricruz",
+          tiktok: cur.tiktok || "https://www.tiktok.com/@mimasbymaricruz",
+        };
+        await c.execute({ sql: "UPDATE settings SET value = ? WHERE key = 'contact'", args: [JSON.stringify(fixed)] });
+      }
+    }
+  } catch {
+    /* si algo falla, la web sigue con los valores por defecto */
+  }
+
   const seeded = (await c.execute("SELECT COUNT(*) c FROM services")).rows[0].c as number;
   if (seeded > 0) return;
 
@@ -112,7 +141,7 @@ async function initDb(c: Client) {
   seedNews.forEach((n, i) => stmts.push({ sql: "INSERT INTO news (tag,title,text,image,sort) VALUES (?,?,?,?,?)", args: [n.tag, n.title, n.text, n.image ?? "", i] }));
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('gallery',?)", args: [JSON.stringify(seedGallery)] });
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('beforeAfter',?)", args: [JSON.stringify(seedBeforeAfter)] });
-  stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('contact',?)", args: [JSON.stringify({ phone: "+34 629 48 76 14", email: "hola@almarizo.com", address: "Carrer de Bonaventura Hernández i Sanahuja, 19, 43002 Tarragona", instagram: "https://www.instagram.com/mimasbymaricruz", tiktok: "https://www.tiktok.com/@mimasbymaricruz", whatsapp: "34629487614" })] });
+  stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('contact',?)", args: [JSON.stringify({ phone: "+34 629 48 76 14", email: "hola@almarizo.com", address: "Carrer de Bonaventura Hernández i Sanahuja, 19, 43002 Tarragona", instagram: "https://www.instagram.com/almarizo.studio/", instagramPersonal: "https://www.instagram.com/mimasbymaricruz", tiktok: "https://www.tiktok.com/@mimasbymaricruz", whatsapp: "34629487614" })] });
   stmts.push({ sql: "INSERT OR IGNORE INTO users (email,name,role,passHash) VALUES (?,?,?,?)", args: ["admin@almarizo.com", "Administración", "admin", hashPassword(pwEnv("ADMIN_PASSWORD", "admin"))] });
   stmts.push({ sql: "INSERT OR IGNORE INTO users (email,name,role,passHash) VALUES (?,?,?,?)", args: ["maricruz@almarizo.com", "Maricruz", "owner", hashPassword(pwEnv("OWNER_PASSWORD", "alma"))] });
   stmts.push({ sql: "INSERT OR IGNORE INTO users (email,name,role,passHash) VALUES (?,?,?,?)", args: ["equipo@almarizo.com", "Equipo", "worker", hashPassword(pwEnv("WORKER_PASSWORD", "equipo"))] });

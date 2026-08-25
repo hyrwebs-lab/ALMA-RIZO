@@ -82,6 +82,69 @@ export const site = {
   ],
 } as const;
 
+/* ============================================================
+   DATOS DE CONTACTO EDITABLES DESDE EL PANEL
+   Los valores de arriba son los de fábrica; lo que la dueña guarde
+   en «Datos de contacto» los sobrescribe en toda la web.
+   ============================================================ */
+export type Contact = {
+  phone: string;
+  phoneHref: string;
+  email: string;
+  address: string;
+  postalCode: string;
+  cityRegion: string;
+  whatsapp: string;
+  whatsappMsg: string;
+  instagram: string;
+  instagramPersonal: string;
+  tiktok: string;
+};
+
+export const defaultContact: Contact = {
+  phone: site.contact.phone,
+  phoneHref: site.contact.phoneHref,
+  email: site.contact.email,
+  address: site.contact.address,
+  postalCode: site.contact.postalCode,
+  cityRegion: site.contact.cityRegion,
+  whatsapp: site.contact.whatsapp,
+  whatsappMsg: site.contact.whatsappMsg,
+  instagram: site.social.instagram,
+  instagramPersonal: site.social.instagramPersonal,
+  tiktok: site.social.tiktok,
+};
+
+const digits = (s: string) => s.replace(/[^\d+]/g, "");
+
+/** Mezcla lo guardado en el panel sobre los valores por defecto (campos vacíos = se ignoran). */
+export function mergeContact(raw: Record<string, unknown> | null | undefined): Contact {
+  const v = (k: string) => {
+    const x = raw?.[k];
+    return typeof x === "string" && x.trim() ? x.trim() : "";
+  };
+  const phone = v("phone") || defaultContact.phone;
+  const wa = v("whatsapp");
+  return {
+    phone,
+    phoneHref: digits(phone) || defaultContact.phoneHref,
+    email: v("email") || defaultContact.email,
+    address: v("address") || defaultContact.address,
+    postalCode: v("postalCode") || defaultContact.postalCode,
+    cityRegion: v("cityRegion") || defaultContact.cityRegion,
+    // Si no ponen WhatsApp aparte, se usa el propio teléfono.
+    whatsapp: digits(wa).replace(/^\+/, "") || digits(phone).replace(/^\+/, "") || defaultContact.whatsapp,
+    whatsappMsg: v("whatsappMsg") || defaultContact.whatsappMsg,
+    instagram: v("instagram") || defaultContact.instagram,
+    instagramPersonal: v("instagramPersonal") || defaultContact.instagramPersonal,
+    tiktok: v("tiktok") || defaultContact.tiktok,
+  };
+}
+
+export const telHref = (c: Contact) => `tel:${c.phoneHref}`;
+export const waHref = (c: Contact, message?: string) =>
+  `https://wa.me/${c.whatsapp}?text=${encodeURIComponent(message ?? c.whatsappMsg)}`;
+
 export type Service = {
   slug: string;
   name: string;
