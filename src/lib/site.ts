@@ -17,8 +17,8 @@ export const site = {
     address: "Carrer de Bonaventura Hernández i Sanahuja, 19",
     postalCode: "43002",
     cityRegion: "Tarragona",
-    phone: "+34 977 23 84 38",
-    phoneHref: "+34977238438",
+    phone: "+34 629 48 76 14", // nº de empresa (sustituye al fijo)
+    phoneHref: "+34629487614",
     email: "hola@almarizo.com", // ⚠️ PLACEHOLDER — pedir correo real del negocio
     whatsapp: "34629487614", // nº de WhatsApp del salón (+34 629 48 76 14)
     whatsappMsg: "¡Hola Alma Rizo! Me gustaría pedir información / reservar cita 🌿",
@@ -27,7 +27,9 @@ export const site = {
   social: {
     // Cuenta del SALÓN — es a la que redirige principalmente la web.
     instagram: "https://www.instagram.com/almarizo.studio/",
-    tiktok: "", // ⚠️ pendiente — enlace real del salón (si tienen)
+    // Cuenta PERSONAL de Maricruz — es donde está la comunidad grande.
+    instagramPersonal: "https://www.instagram.com/mimasbymaricruz",
+    tiktok: "https://www.tiktok.com/@mimasbymaricruz",
     facebook: "", // ⚠️ pendiente — enlace real (si tienen)
   },
 
@@ -390,7 +392,7 @@ export const legal = {
   email: "hola@almarizo.com", // ⚠️ correo legal real
 };
 
-export type Faq = { q: string; a: string };
+export type Faq = { q: string; a: string; link?: { href: string; label: string } };
 export const faq: Faq[] = [
   {
     q: "¿Qué es el método curly?",
@@ -398,7 +400,8 @@ export const faq: Faq[] = [
   },
   {
     q: "¿Cómo vengo a mi primera cita?",
-    a: "Ven con el pelo limpio (lavado el día antes), seco y suelto —sin recoger ni planchar— para poder ver tu rizo natural y hacer un buen diagnóstico. Si tienes dudas, te enviamos un vídeo con las indicaciones al reservar.",
+    a: "Ven con el pelo limpio (lavado el día antes), seco y suelto —sin recoger ni planchar— para poder ver tu rizo natural y hacer un buen diagnóstico. Te lo contamos todo en este vídeo:",
+    link: { href: "https://www.instagram.com/reel/DaLkbr3syF9/", label: "Ver el vídeo en Instagram" },
   },
   {
     q: "¿Cuánto dura una cita?",

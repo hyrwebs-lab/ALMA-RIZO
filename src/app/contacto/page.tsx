@@ -10,6 +10,7 @@ import {
   PhoneIcon,
   WhatsAppIcon,
   InstagramIcon,
+  TikTokIcon,
 } from "@/components/ui/Icons";
 
 export const metadata: Metadata = {
@@ -62,10 +63,16 @@ export default function ContactoPage() {
               <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] px-4 py-2.5 text-xs font-medium uppercase tracking-widest text-white transition-opacity hover:opacity-90">
                 <WhatsAppIcon className="h-4 w-4" /> WhatsApp
               </a>
-              <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand/20 text-brand transition-colors hover:border-gold hover:text-gold">
+              <a href={site.social.instagramPersonal} target="_blank" rel="noopener noreferrer" aria-label="Instagram de Maricruz" className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand/20 text-brand transition-colors hover:border-gold hover:text-gold">
                 <InstagramIcon className="h-5 w-5" />
               </a>
+              <a href={site.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand/20 text-brand transition-colors hover:border-gold hover:text-gold">
+                <TikTokIcon className="h-5 w-5" />
+              </a>
             </div>
+            <p className="mt-3 text-sm text-ink-soft">
+              ¿Prefieres escribir? Mándanos un <strong className="font-medium text-brand">WhatsApp</strong> al {site.contact.phone} y te respondemos encantadas.
+            </p>
 
             <div className="mt-8 overflow-hidden border border-brand/10">
               <iframe

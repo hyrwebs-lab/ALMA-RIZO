@@ -51,7 +51,7 @@ export default async function Home() {
     areaServed: "Tarragona",
     priceRange: "€€",
     currenciesAccepted: "EUR",
-    sameAs: [site.social.instagram],
+    sameAs: [site.social.instagram, site.social.instagramPersonal, site.social.tiktok],
     hasMap: site.mapsLink,
     openingHoursSpecification: [
       { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday"], opens: "09:30", closes: "18:30" },

@@ -78,7 +78,7 @@ export default function ReelWall() {
       </div>
 
       <div className="mt-8 text-center">
-        <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest text-cream/70 transition-colors hover:text-gold">
+        <a href={site.social.instagramPersonal} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest text-cream/70 transition-colors hover:text-gold">
           {t.cta}
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 5l7 7-7 7" /></svg>
         </a>

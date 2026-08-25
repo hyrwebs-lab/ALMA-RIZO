@@ -149,7 +149,7 @@ function seed(): DataShape {
       },
     ],
     settings: {
-      phone: "+34 977 23 84 38",
+      phone: "+34 629 48 76 14",
       email: "hola@almarizo.com",
       address: "Carrer de Bonaventura Hernández i Sanahuja, 19, 43002 Tarragona",
       instagram: "https://www.instagram.com/mimasbymaricruz/",

@@ -23,7 +23,25 @@ export default function Accordion({ items }: { items: Faq[] }) {
             </button>
             <div className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
               <div className="overflow-hidden">
-                <p className="px-6 pb-5 leading-relaxed text-ink-soft">{item.a}</p>
+                <p className="px-6 leading-relaxed text-ink-soft">{item.a}</p>
+                {item.link && (
+                  <p className="px-6 pt-3">
+                    <a
+                      href={item.link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-gold/60 px-4 py-2 text-sm font-medium text-brand transition-colors hover:border-gold hover:bg-gold/10"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 text-gold" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden>
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                      </svg>
+                      {item.link.label}
+                    </a>
+                  </p>
+                )}
+                <div className="pb-5" />
               </div>
             </div>
           </div>

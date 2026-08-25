@@ -3,10 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { nav, site } from "@/lib/site";
-import { telUrl } from "@/lib/utils";
+import { telUrl, whatsappUrl } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import {
   InstagramIcon,
+  TikTokIcon,
+  WhatsAppIcon,
   MapPinIcon,
   PhoneIcon,
   ClockIcon,
@@ -60,6 +62,15 @@ export default function Footer() {
                 {site.contact.phone}
               </a>
             </li>
+            <li>
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="flex gap-3 transition-colors hover:text-gold">
+                <WhatsAppIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                <span>
+                  {site.contact.phone}
+                  <span className="block text-cream/60">También por WhatsApp</span>
+                </span>
+              </a>
+            </li>
             <li className="flex gap-3">
               <ClockIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
               <span className="space-y-0.5">
@@ -70,10 +81,32 @@ export default function Footer() {
               </span>
             </li>
           </ul>
-          <div className="mt-6 flex items-center gap-4">
-            <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition-colors hover:text-gold">
-              <InstagramIcon className="h-5 w-5" />
-            </a>
+          {/* Redes — la comunidad es fuerte, así que se destaca de verdad */}
+          <div className="mt-8 rounded-2xl border border-cream/15 bg-cream/5 p-5">
+            <p className="font-display text-lg text-cream">Síguenos en Instagram y TikTok</p>
+            <p className="mt-1 text-sm text-cream/70">
+              Somos mucha comunidad rizada. Únete y no te pierdas nada 🌿
+            </p>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              <li>
+                <a href={site.social.instagramPersonal} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
+                  <InstagramIcon className="h-5 w-5 shrink-0 text-gold" />
+                  <span>@mimasbymaricruz <span className="text-cream/60">· la comunidad de Maricruz</span></span>
+                </a>
+              </li>
+              <li>
+                <a href={site.social.tiktok} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
+                  <TikTokIcon className="h-5 w-5 shrink-0 text-gold" />
+                  <span>@mimasbymaricruz <span className="text-cream/60">· TikTok</span></span>
+                </a>
+              </li>
+              <li>
+                <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition-colors hover:text-gold">
+                  <InstagramIcon className="h-5 w-5 shrink-0 text-gold" />
+                  <span>@almarizo.studio <span className="text-cream/60">· el salón</span></span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 

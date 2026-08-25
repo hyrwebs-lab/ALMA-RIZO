@@ -9,6 +9,7 @@ import { cn, telUrl } from "@/lib/utils";
 import {
   PhoneIcon,
   InstagramIcon,
+  TikTokIcon,
   MenuIcon,
   CloseIcon,
   CalendarIcon,
@@ -104,7 +105,7 @@ export default function Header() {
         {/* Right actions */}
         <div className="flex items-center justify-self-end gap-2 sm:gap-3">
           <a
-            href={site.social.instagram}
+            href={site.social.instagramPersonal}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
@@ -114,6 +115,18 @@ export default function Header() {
             )}
           >
             <InstagramIcon className="h-5 w-5" />
+          </a>
+          <a
+            href={site.social.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+            className={cn(
+              "hidden transition-colors hover:text-gold xl:inline-flex",
+              overHero ? "text-cream/90" : "text-ink",
+            )}
+          >
+            <TikTokIcon className="h-5 w-5" />
           </a>
 
           <span className="hidden md:block">
@@ -193,8 +206,11 @@ export default function Header() {
             <LanguageSwitcher light />
           </div>
           <div className="mt-4 flex items-center gap-6 text-cream/80">
-            <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href={site.social.instagramPersonal} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <InstagramIcon className="h-6 w-6" />
+            </a>
+            <a href={site.social.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <TikTokIcon className="h-6 w-6" />
             </a>
             <a href={telUrl()} aria-label="Llamar">
               <PhoneIcon className="h-6 w-6" />
