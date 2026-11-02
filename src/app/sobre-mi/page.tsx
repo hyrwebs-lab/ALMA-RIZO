@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import PageHero from "@/components/site/PageHero";
 import Reveal from "@/components/ui/Reveal";
-import { ButtonLink } from "@/components/ui/Button";
+import ReservarButton from "@/components/site/ReservarButton";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -68,9 +68,7 @@ export default function SobreMiPage() {
               “{site.claim}”
             </p>
             <div className="mt-8">
-              <ButtonLink href="/reservar" variant="gold" size="md">
-                Reserva tu cita
-              </ButtonLink>
+              <ReservarButton variant="gold" size="md" label="Reserva tu cita" />
             </div>
           </Reveal>
         </div>

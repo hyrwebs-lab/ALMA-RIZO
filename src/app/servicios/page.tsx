@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import PageHero from "@/components/site/PageHero";
 import Reveal from "@/components/ui/Reveal";
-import { ButtonLink } from "@/components/ui/Button";
-import { ArrowIcon } from "@/components/ui/Icons";
+import ReservarButton from "@/components/site/ReservarButton";
 import { getServices } from "@/lib/content";
 import { rituals } from "@/lib/site";
 import { formatDuration, formatPrice } from "@/lib/utils";
@@ -57,14 +56,13 @@ export default async function ServiciosPage() {
                     <span className="font-display text-2xl text-brand">
                       {formatPrice(s.price)}
                     </span>
-                    <ButtonLink
-                      href={`/reservar?servicio=${s.slug}`}
+                    <ReservarButton
+                      service={s.name}
                       variant="gold"
                       size="sm"
                       className="md:ml-auto"
-                    >
-                      Reservar <ArrowIcon className="h-4 w-4" />
-                    </ButtonLink>
+                      label="Reservar"
+                    />
                   </div>
                 </div>
               </article>

@@ -1,7 +1,7 @@
 # Traspaso del proyecto — Alma Rizo
 
 > Documento para retomar el trabajo desde otro ordenador sin perder contexto.
-> Última actualización: **8 de septiembre de 2026**.
+> Última actualización: **2 de noviembre de 2026**.
 
 ## 1. Qué es esto
 
@@ -24,9 +24,11 @@ las reservas funcionan y el panel guarda cambios que se ven en la web.
 - Web pública completa: portada con banner de 3 vídeos verticales, método,
   servicios con precios reales, antes/después, sobre mí, reseñas, muro de reels,
   marcas, contacto y páginas legales.
-- **Reservas funcionando**: asistente de 5 pasos, calendario mensual (hasta 6 meses
-  vista), bloqueo de domingos y horas pasadas, y protección real contra dobles
-  reservas (índice único en base de datos + control de solapamiento por duración).
+- **Las reservas se piden por WhatsApp**: la web ya no da hora. Todos los botones
+  de «Reservar» abren WhatsApp con el mensaje escrito (y el servicio, si se pulsa
+  desde una ficha), y `/reservar` es una página de contacto —el QR del escaparate
+  apunta ahí—. Las citas se apuntan en el panel, que sigue bloqueando las dobles
+  reservas (índice único + control de solapamiento por duración).
 - **Panel de gestión** con 3 roles (superadmin / dueña / trabajadora) y agenda tipo
   calendario por trabajadora, con recordatorio manual por WhatsApp de un toque.
 - **Todo lo que se edita en el panel sale en la web**: servicios, antes/después,
@@ -44,14 +46,14 @@ las reservas funcionan y el panel guarda cambios que se ven en la web.
 | Vídeos de transformaciones reales (los tiene Génnesis) | Falta el material |
 | URL del reel de Instagram de cada vídeo | Falta; ahora casi todos van al perfil |
 | Más fotos de casos reales (solo hay 2 antes/después) | Falta el material |
-| Avisos automáticos al entrar una reserva | Decidido a medias, sin implementar |
+| Avisos automáticos al entrar una reserva | Ya no aplica: la reserva llega por WhatsApp |
 | Cobro del proyecto | Pendiente |
 
-**Importante sobre las reservas:** funcionan, pero **cuando entra una reserva nadie
-recibe aviso**; la cita solo aparece en el panel. La clienta llegó a pensar que el
-botón no funcionaba por esto. Las opciones habladas fueron: aviso manual por
-WhatsApp (gratis, ya existe), automático por WhatsApp (de pago, API de Meta) o
-automático por email (gratis).
+**Importante sobre las reservas:** la clienta pidió que la web **no diera hora** y
+que todo pasara por WhatsApp, así que el asistente de 5 pasos y el calendario se
+han quitado. La dueña cierra la cita por WhatsApp y la apunta en el panel, donde
+sigue teniendo el recordatorio de un toque. Así también se resuelve lo de que
+nadie recibía aviso al entrar una reserva.
 
 ## 4. Montar el proyecto en el ordenador nuevo
 
@@ -90,8 +92,10 @@ clienta (`GUIA-DE-USO.pdf`) y en las notas privadas del proyecto.
 - **Datos de contacto:** `src/lib/site.ts` tiene los valores de fábrica; lo que la
   dueña guarda en el panel los sobrescribe (`mergeContact`). El layout los lee de la
   base de datos y los reparte con `src/lib/contact.tsx`.
-- **Reservas:** lógica en `src/lib/db.ts` (`createReservation`, `slotsForDate`).
-  El calendario es `src/components/reservar/Calendar.tsx`.
+- **Reservas:** la web solo enlaza a WhatsApp —`src/components/site/ReservarButton.tsx`
+  con el mensaje de `src/lib/booking.ts`— y la página `/reservar` es
+  `src/components/reservar/ReservarWhatsApp.tsx`. En el panel siguen vivos
+  `createReservation` y `slotsForDate` de `src/lib/db.ts` para dar de alta citas.
 - **Migraciones:** en `initDb` de `src/lib/db.ts` hay migraciones que se aplican
   solas al arrancar (columna `news.image` y refresco de los datos de contacto).
 

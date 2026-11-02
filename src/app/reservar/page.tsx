@@ -1,24 +1,29 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import ReservarClient from "@/components/reservar/ReservarClient";
+import ReservarWhatsApp from "@/components/reservar/ReservarWhatsApp";
+import { getServices } from "@/lib/content";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Reservar cita · Cabello rizado en Tarragona",
   description:
-    "Reserva tu cita en Alma Rizo en pocos pasos: elige servicio, estilista, fecha y hora.",
+    "Pide tu cita en Alma Rizo por WhatsApp: elige servicio, escríbenos y te damos hora al momento.",
 };
 
-export default function ReservarPage() {
+export default async function ReservarPage() {
+  const services = await getServices();
+
   return (
     <section className="min-h-[60vh] bg-cream-soft pt-24 md:pt-28">
       <div className="border-b border-brand/10 bg-brand py-10 text-center text-cream">
         <p className="gold-rule eyebrow mb-3 justify-center text-gold">Reservas</p>
         <h1 className="font-display text-4xl sm:text-5xl">Reserva tu cita</h1>
-        <p className="mt-2 text-cream/70">Empieza a entender tu rizo en pocos pasos.</p>
+        <p className="mx-auto mt-3 max-w-xl px-6 text-cream/75">
+          Escríbenos por WhatsApp y te damos hora. Así valoramos tu rizo antes de la
+          cita y te reservamos el tiempo que necesitas.
+        </p>
       </div>
-      <Suspense fallback={<div className="py-32 text-center text-ink-soft">Cargando…</div>}>
-        <ReservarClient />
-      </Suspense>
+      <ReservarWhatsApp services={services} />
     </section>
   );
 }

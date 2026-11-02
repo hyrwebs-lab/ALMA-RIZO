@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import PageHero from "@/components/site/PageHero";
 import Reveal from "@/components/ui/Reveal";
-import { ButtonLink } from "@/components/ui/Button";
-import { ArrowIcon } from "@/components/ui/Icons";
+import ReservarButton from "@/components/site/ReservarButton";
 import { metodoSteps, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -114,9 +113,12 @@ export default function MetodoPage() {
             Reserva el Método Alma Rizo y empieza a entender tu rizo.
           </p>
           <div className="mt-7">
-            <ButtonLink href="/reservar?servicio=metodo-alma-rizo" variant="gold" size="lg">
-              Reservar el Método <ArrowIcon className="h-4 w-4" />
-            </ButtonLink>
+            <ReservarButton
+              service="Método Alma Rizo"
+              variant="gold"
+              size="lg"
+              label="Reservar el Método"
+            />
           </div>
         </Reveal>
       </section>

@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/Button";
-import { PhoneIcon, ArrowIcon, WhatsAppIcon, ClockIcon } from "@/components/ui/Icons";
+import { PhoneIcon, ClockIcon } from "@/components/ui/Icons";
+import ReservarButton from "@/components/site/ReservarButton";
 import { site, news as seedNews, type News } from "@/lib/site";
 import { useLinks } from "@/lib/contact";
 import { useT } from "@/lib/i18n";
@@ -153,7 +154,7 @@ function Portada() {
       <Image src="/logos/logo-light.png" alt="Alma Rizo · Curly Studio by MariCruz" width={1242} height={594} priority sizes="(min-width: 640px) 520px, 84vw" className="h-auto w-[84vw] max-w-[520px] drop-shadow-[0_10px_45px_rgba(0,0,0,0.55)]" />
       <p className="mx-auto mt-6 max-w-xl text-lg text-cream/90 drop-shadow sm:text-xl">{t.hero.subtitle}</p>
       <div className="pointer-events-auto mt-9 flex flex-wrap items-center justify-center gap-4">
-        <ButtonLink href="/reservar" variant="gold" size="lg">{t.cta.reservar} <ArrowIcon className="h-4 w-4" /></ButtonLink>
+        <ReservarButton variant="gold" size="lg" label={t.cta.reservar} />
         <ButtonLink href={tel} variant="outlineLight" size="lg" external><PhoneIcon className="h-4 w-4" /> {t.cta.llamar}</ButtonLink>
       </div>
     </div>
@@ -191,7 +192,7 @@ function Novedades({ news }: { news: News[] }) {
           <h2 className="mt-5 font-display text-[1.9rem] leading-[1.08] sm:text-5xl">{featured.title}</h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-cream/85 line-clamp-3 sm:text-base">{featured.text}</p>
           <div className="mt-7 flex flex-wrap justify-center gap-3 sm:mt-8">
-            <ButtonLink href="/reservar" variant="gold" size="md">{t.cta.reservarAhora}</ButtonLink>
+            <ReservarButton variant="gold" size="md" label={t.cta.reservarAhora} />
           </div>
           </div>
         </div>
@@ -216,7 +217,7 @@ function Novedades({ news }: { news: News[] }) {
 /* ---------- SLIDE 3: CONTACTO + VÍDEO "CÓMO VENIR" ---------- */
 function Contacto({ active }: { active: boolean }) {
   const t = useT();
-  const { contact, tel, wa } = useLinks();
+  const { contact, tel } = useLinks();
   const groups = [
     { days: "Lun · Mar · Mié", value: "9:30 – 18:30" },
     { days: "Jue · Vie", value: "9:30 – 19:30" },
@@ -239,9 +240,8 @@ function Contacto({ active }: { active: boolean }) {
           ))}
         </div>
         <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-          <ButtonLink href="/reservar" variant="gold" size="lg">{t.cta.reservarCorto}</ButtonLink>
+          <ReservarButton variant="gold" size="lg" label={t.cta.reservarCorto} />
           <ButtonLink href={tel} variant="outlineLight" size="md" external><PhoneIcon className="h-4 w-4" /> {t.cta.llamar}</ButtonLink>
-          <ButtonLink href={wa()} variant="outlineLight" size="md" external><WhatsAppIcon className="h-4 w-4" /> WhatsApp</ButtonLink>
         </div>
       </div>
 

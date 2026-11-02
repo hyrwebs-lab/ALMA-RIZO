@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import PageHero from "@/components/site/PageHero";
 import Reveal from "@/components/ui/Reveal";
-import { ButtonLink } from "@/components/ui/Button";
+import ReservarButton from "@/components/site/ReservarButton";
 import { consejos } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -66,7 +66,7 @@ export default function ConsejosPage() {
             En tu cita te enseñamos, paso a paso, cómo cuidarlo en casa.
           </p>
           <div className="mt-7">
-            <ButtonLink href="/reservar" variant="gold" size="lg">Reserva tu cita</ButtonLink>
+            <ReservarButton variant="gold" size="lg" label="Reserva tu cita" />
           </div>
         </Reveal>
       </section>

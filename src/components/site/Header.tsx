@@ -13,9 +13,9 @@ import {
   TikTokIcon,
   MenuIcon,
   CloseIcon,
-  CalendarIcon,
 } from "@/components/ui/Icons";
 import { ButtonLink } from "@/components/ui/Button";
+import ReservarButton from "@/components/site/ReservarButton";
 import { useT } from "@/lib/i18n";
 import LanguageSwitcher from "@/components/site/LanguageSwitcher";
 
@@ -134,9 +134,7 @@ export default function Header() {
           <span className="hidden md:block">
             <LanguageSwitcher light={overHero} />
           </span>
-          <ButtonLink href="/reservar" variant="gold" size="sm" className="hidden sm:inline-flex">
-            <CalendarIcon className="h-4 w-4" /> {t.cta.reserva}
-          </ButtonLink>
+          <ReservarButton variant="gold" size="sm" className="hidden sm:inline-flex" label={t.cta.reserva} />
           <ButtonLink
             href={tel}
             variant={overHero ? "outlineLight" : "outline"}
@@ -201,9 +199,7 @@ export default function Header() {
             <span className="text-cream/25">·</span>
             <Link href="/faq" className="transition-colors hover:text-gold">{t.footer.faq}</Link>
           </div>
-          <ButtonLink href="/reservar" variant="gold" size="lg" className="mt-4">
-            {t.cta.reservar}
-          </ButtonLink>
+          <ReservarButton variant="gold" size="lg" className="mt-4" label={t.cta.reservar} />
           <div className="mt-5 text-cream">
             <LanguageSwitcher light />
           </div>

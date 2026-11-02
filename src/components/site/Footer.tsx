@@ -150,9 +150,9 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/reservar" className="transition-colors hover:text-gold">
+              <a href={wa()} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-gold">
                 {t.footer.reservar}
-              </Link>
+              </a>
             </li>
           </ul>
         </div>

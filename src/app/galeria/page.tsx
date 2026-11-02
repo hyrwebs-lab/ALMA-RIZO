@@ -3,7 +3,7 @@ import Image from "next/image";
 import PageHero from "@/components/site/PageHero";
 import Reveal from "@/components/ui/Reveal";
 import BeforeAfterPair from "@/components/site/BeforeAfterPair";
-import { ButtonLink } from "@/components/ui/Button";
+import ReservarButton from "@/components/site/ReservarButton";
 import { getBeforeAfter, getGallery } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -80,9 +80,7 @@ export default async function GaleriaPage() {
             ¿Quieres ser nuestra próxima transformación?
           </h2>
           <div className="mt-7">
-            <ButtonLink href="/reservar" variant="gold" size="lg">
-              Reserva tu cita
-            </ButtonLink>
+            <ReservarButton variant="gold" size="lg" label="Reserva tu cita" />
           </div>
         </Reveal>
       </section>

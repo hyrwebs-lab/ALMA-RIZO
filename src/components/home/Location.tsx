@@ -2,6 +2,7 @@
 
 import Reveal from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
+import ReservarButton from "@/components/site/ReservarButton";
 import { MapPinIcon, ClockIcon, PhoneIcon, ArrowIcon } from "@/components/ui/Icons";
 import { site } from "@/lib/site";
 import { useLinks } from "@/lib/contact";
@@ -48,9 +49,7 @@ export default function Location() {
           </ul>
 
           <div className="mt-9 flex flex-wrap gap-4">
-            <ButtonLink href="/reservar" variant="gold" size="md">
-              {t.cta.reservarCorto}
-            </ButtonLink>
+            <ReservarButton variant="gold" size="md" label={t.cta.reservarCorto} />
             <ButtonLink href={site.mapsLink} variant="outline" size="md" external>
               {t.cta.comoLlegar} <ArrowIcon className="h-4 w-4" />
             </ButtonLink>

@@ -44,23 +44,11 @@ export async function logoutAction() {
   return { ok: true as const };
 }
 
-/* ---------------- Public: booking ---------------- */
+/* ---------------- Agenda: huecos libres ----------------
+   La web pública ya no cierra citas (se piden por WhatsApp); esto lo usa el
+   panel al añadir una cita a mano. */
 export async function getAvailabilityAction(date: string, workerId: string, durationMin: number) {
   return db.slotsForDate(date, workerId, durationMin);
-}
-
-export async function createReservationAction(input: db.NewReservation) {
-  try {
-    const r = await db.createReservation(input);
-    return { ok: true as const, reservation: r };
-  } catch (e) {
-    return { ok: false as const, error: e instanceof Error ? e.message : "No se pudo crear la reserva" };
-  }
-}
-
-export async function getBookingDataAction() {
-  const [services, workers] = await Promise.all([db.allServices(), db.allWorkers()]);
-  return { services, workers: workers.filter((w) => w.active === 1) };
 }
 
 export async function sendMessageAction(input: { name: string; email: string; phone: string; text: string }) {

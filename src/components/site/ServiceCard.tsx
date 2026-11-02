@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ButtonLink } from "@/components/ui/Button";
+import ReservarButton from "@/components/site/ReservarButton";
 import { ArrowIcon } from "@/components/ui/Icons";
 import { formatDuration, formatPrice } from "@/lib/utils";
 import type { Service } from "@/lib/site";
@@ -39,13 +39,12 @@ export default function ServiceCard({ service }: { service: Service }) {
         </div>
 
         <div className="mt-5 flex items-center gap-3">
-          <ButtonLink
-            href={`/reservar?servicio=${service.slug}`}
+          <ReservarButton
+            service={service.name}
             variant="gold"
             size="sm"
-          >
-            {t.services.reservar}
-          </ButtonLink>
+            label={t.services.reservar}
+          />
           <Link
             href={`/servicios#${service.slug}`}
             className="inline-flex items-center gap-1 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-brand transition-colors hover:text-gold"

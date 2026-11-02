@@ -3,6 +3,7 @@ import PageHero from "@/components/site/PageHero";
 import Reveal from "@/components/ui/Reveal";
 import Accordion from "@/components/site/Accordion";
 import { ButtonLink } from "@/components/ui/Button";
+import ReservarButton from "@/components/site/ReservarButton";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 import { faq } from "@/lib/site";
 import { waHref } from "@/lib/site";
@@ -44,7 +45,7 @@ export default async function FaqPage() {
           <Reveal className="mx-auto mt-12 max-w-xl text-center">
             <p className="text-ink-soft">¿No encuentras tu respuesta?</p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
-              <ButtonLink href="/reservar" variant="gold" size="md">Reservar cita</ButtonLink>
+              <ReservarButton variant="gold" size="md" label="Reservar cita" />
               <ButtonLink href={waHref(contact)} variant="outline" size="md" external>
                 <WhatsAppIcon className="h-4 w-4" /> Preguntar por WhatsApp
               </ButtonLink>
