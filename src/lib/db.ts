@@ -68,6 +68,21 @@ function verifyPassword(pw: string, stored: string) {
 }
 const pwEnv = (k: string, def: string) => process.env[k] || def;
 
+/**
+ * Cambios de contenido que se aplican UNA sola vez a una BD ya sembrada (prod).
+ * Se apunta en `settings` para no volver a pisar lo que la dueña edite después.
+ */
+async function runOnce(c: Client, name: string, stmts: { sql: string; args: InArgs }[]) {
+  const key = `migration:${name}`;
+  try {
+    const done = (await c.execute({ sql: "SELECT 1 FROM settings WHERE key = ?", args: [key] })).rows.length > 0;
+    if (done) return;
+    await c.batch([...stmts, { sql: "INSERT OR IGNORE INTO settings (key,value) VALUES (?, ?)", args: [key, new Date().toISOString()] }], "write");
+  } catch {
+    /* si falla, la web sigue con el contenido que ya tenía */
+  }
+}
+
 /* ---------- schema + seed ---------- */
 async function initDb(c: Client) {
   await c.executeMultiple(`
@@ -87,7 +102,7 @@ async function initDb(c: Client) {
   // Migraciones idempotentes: añaden columnas nuevas a BDs ya existentes (prod).
   // CREATE TABLE IF NOT EXISTS no altera tablas ya creadas, así que las añadimos aquí.
   // Debe ir ANTES del early-return de "ya sembrado" para ejecutarse también en prod.
-  const migrations: [string, string, string][] = [["news", "image", "TEXT"]];
+  const migrations: [string, string, string][] = [["news", "image", "TEXT"], ["news", "cta", "TEXT"]];
   for (const [table, col, type] of migrations) {
     try {
       await c.execute(`ALTER TABLE ${table} ADD COLUMN ${col} ${type}`);
@@ -126,7 +141,25 @@ async function initDb(c: Client) {
   }
 
   const seeded = (await c.execute("SELECT COUNT(*) c FROM services")).rows[0].c as number;
-  if (seeded > 0) return;
+  if (seeded > 0) {
+    await runOnce(c, "2026-11-cambios-clienta", [
+      // La promo del 20 % ya no se hace: pasa a ser la primera consulta gratuita.
+      {
+        sql: "UPDATE news SET tag = ?, title = ?, text = ?, cta = ? WHERE title = '20% en tu primera visita'",
+        args: [
+          "Primera consulta gratuita",
+          "¿Quieres descubrir el potencial de tus rizos?",
+          "Te asesoramos de forma personalizada para encontrar lo que tu cabello realmente necesita.",
+          "Quiero mi consulta gratis",
+        ],
+      },
+      // Fotos: corte en seco real para el Corte Curly, e Iluminación ↔ Moldeado intercambiadas.
+      { sql: "UPDATE services SET image = '/photos/corte-en-seco.webp' WHERE slug = 'corte-curly'", args: [] },
+      { sql: "UPDATE services SET image = '/photos/curly-color-bride.jpg' WHERE slug = 'iluminacion-curlyage'", args: [] },
+      { sql: "UPDATE services SET image = '/photos/real-despues-rizo.jpg' WHERE slug = 'moldeado-inteligente'", args: [] },
+    ]);
+    return;
+  }
 
   const stmts: { sql: string; args: InArgs }[] = [];
   seedServices.forEach((s, i) =>
@@ -138,7 +171,7 @@ async function initDb(c: Client) {
   ].forEach((w, i) => stmts.push({ sql: "INSERT OR IGNORE INTO workers (id,name,role,active,sort) VALUES (?,?,?,1,?)", args: [w.id, w.name, w.role, i] }));
   seedReviews.forEach((r, i) => stmts.push({ sql: "INSERT INTO reviews (name,rating,text,source,sort) VALUES (?,?,?,?,?)", args: [r.name, r.rating, r.text, r.source ?? "", i] }));
   seedProducts.forEach((p, i) => stmts.push({ sql: "INSERT OR IGNORE INTO products (slug,name,description,price,image,active,sort) VALUES (?,?,?,?,?,?,?)", args: [p.slug, p.name, p.description, p.price, p.image, p.active ? 1 : 0, i] }));
-  seedNews.forEach((n, i) => stmts.push({ sql: "INSERT INTO news (tag,title,text,image,sort) VALUES (?,?,?,?,?)", args: [n.tag, n.title, n.text, n.image ?? "", i] }));
+  seedNews.forEach((n, i) => stmts.push({ sql: "INSERT INTO news (tag,title,text,image,cta,sort) VALUES (?,?,?,?,?,?)", args: [n.tag, n.title, n.text, n.image ?? "", n.cta ?? "", i] }));
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('gallery',?)", args: [JSON.stringify(seedGallery)] });
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('beforeAfter',?)", args: [JSON.stringify(seedBeforeAfter)] });
   stmts.push({ sql: "INSERT OR IGNORE INTO settings (key,value) VALUES ('contact',?)", args: [JSON.stringify({ phone: "+34 629 48 76 14", email: "hola@almarizo.com", address: "Carrer de Bonaventura Hernández i Sanahuja, 19, 43002 Tarragona", instagram: "https://www.instagram.com/almarizo.studio/", instagramPersonal: "https://www.instagram.com/mimasbymaricruz", tiktok: "https://www.tiktok.com/@mimasbymaricruz", whatsapp: "34629487614" })] });
@@ -276,8 +309,8 @@ type ReviewInput = { name: string; rating: number; text: string; source: string 
 export const replaceReviews = (items: ReviewInput[]) => replaceAll("reviews", "name,rating,text,source,sort", items.map((r, i) => [r.name, r.rating, r.text, r.source ?? "", i]));
 type ProductInput = { slug: string; name: string; description: string; price: number; image: string; active: boolean };
 export const replaceProducts = (items: ProductInput[]) => replaceAll("products", "slug,name,description,price,image,active,sort", items.map((p, i) => [p.slug, p.name, p.description, p.price, p.image, p.active ? 1 : 0, i]));
-type NewsInput = { tag: string; title: string; text: string; image?: string };
-export const replaceNews = (items: NewsInput[]) => replaceAll("news", "tag,title,text,image,sort", items.map((n, i) => [n.tag, n.title, n.text, n.image ?? "", i]));
+type NewsInput = { tag: string; title: string; text: string; image?: string; cta?: string };
+export const replaceNews = (items: NewsInput[]) => replaceAll("news", "tag,title,text,image,cta,sort", items.map((n, i) => [n.tag, n.title, n.text, n.image ?? "", n.cta ?? "", i]));
 
 /* ---------- auth ---------- */
 export async function authenticate(email: string, password: string) {

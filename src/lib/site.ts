@@ -180,7 +180,7 @@ export const services: Service[] = [
     durationMin: 60,
     price: 60,
     featured: true,
-    image: "/photos/real-definicion.jpg",
+    image: "/photos/corte-en-seco.webp",
   },
   {
     slug: "ritual-alma-rizo",
@@ -221,7 +221,7 @@ export const services: Service[] = [
       "Técnica de coloración diseñada específicamente para cabello rizado: aporta luz, dimensión y movimiento sin comprometer la salud de la fibra, respetando tu patrón de rizo. El presupuesto se define tras un diagnóstico personalizado.",
     durationMin: 210,
     price: 100,
-    image: "/photos/real-despues-rizo.jpg",
+    image: "/photos/curly-color-bride.jpg",
   },
   {
     slug: "moldeado-inteligente",
@@ -231,7 +231,7 @@ export const services: Service[] = [
       "Transformación permanente que adapta la técnica a tu cabello para crear ondas suaves, rizos con nervio o afro, con más volumen y una definición duradera. Fórmulas orgánicas y sin amoníaco. Presupuesto tras diagnóstico.",
     durationMin: 180,
     price: 100,
-    image: "/photos/real-salon.jpg",
+    image: "/photos/real-despues-rizo.jpg",
   },
 ];
 
@@ -422,15 +422,17 @@ export const products: Product[] = [
   },
 ];
 
-export type News = { title: string; text: string; tag: string; image?: string };
+/** `cta`: texto del botón de la novedad destacada (si falta, «Reservar ahora»). */
+export type News = { title: string; text: string; tag: string; image?: string; cta?: string };
 
 /* Novedades / promociones para el carrusel de portada. ⚠️ Contenido de ejemplo editable. */
 export const news: News[] = [
   {
-    tag: "Promoción",
-    title: "20% en tu primera visita",
-    text: "Reserva tu diagnóstico + corte curly este mes y llévate un 20% de descuento.",
+    tag: "Primera consulta gratuita",
+    title: "¿Quieres descubrir el potencial de tus rizos?",
+    text: "Te asesoramos de forma personalizada para encontrar lo que tu cabello realmente necesita.",
     image: "/photos/curly-color-bride.jpg",
+    cta: "Quiero mi consulta gratis",
   },
   {
     tag: "Nuevo producto",

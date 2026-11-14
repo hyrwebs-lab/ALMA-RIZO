@@ -52,6 +52,7 @@ type View =
 type Pair = { before: string; after: string; label: string };
 
 const PHOTO_POOL = [
+  "/photos/corte-en-seco.webp",
   "/photos/curly-portrait-color.jpg",
   "/photos/curly-color-bride.jpg",
   "/photos/curly-editorial-1.jpg",
@@ -924,6 +925,13 @@ function NovedadesEditor() {
               <button onClick={() => remove(i)} className="text-xs text-rose-600 hover:underline">Eliminar</button>
             </div>
             <textarea className={`${inputCls} mt-2 h-16 resize-none text-sm`} value={n.text} onChange={(e) => update(i, { text: e.target.value })} placeholder="Texto" />
+            {i === 0 && (
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="text-xs text-ink-soft">Texto del botón:</span>
+                <input className={`${inputCls} max-w-[280px] text-sm`} value={n.cta ?? ""} onChange={(e) => update(i, { cta: e.target.value })} placeholder="Reservar ahora" />
+                <span className="text-[0.7rem] text-ink-soft">Abre WhatsApp con un mensaje que menciona la etiqueta.</span>
+              </div>
+            )}
             <div className="mt-2 flex items-center gap-2">
               <span className="text-xs text-ink-soft">Foto:</span>
               <select className={`${inputCls} max-w-[240px] text-sm`} value={n.image ?? ""} onChange={(e) => update(i, { image: e.target.value })}>

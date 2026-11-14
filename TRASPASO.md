@@ -33,8 +33,10 @@ las reservas funcionan y el panel guarda cambios que se ven en la web.
   calendario por trabajadora, con recordatorio manual por WhatsApp de un toque.
 - **Todo lo que se edita en el panel sale en la web**: servicios, antes/después,
   novedades, reseñas, galería, trabajadores y datos de contacto.
-- Identidad visual según la guía de marca, con el verde salvia `#688b5e` que eligió
-  la clienta.
+- Identidad visual según la guía de marca. Color corporativo definitivo:
+  **PANTONE 7720 C (`#00635b`)**, desde noviembre de 2026 (antes salvia `#688b5e`).
+- Cambios de contenido en producción: se aplican con `runOnce` en `initDb`
+  (`src/lib/db.ts`), que los ejecuta una sola vez y lo apunta en `settings`.
 - Teléfono de empresa +34 629 48 76 14 (sustituyó al fijo) y aviso de WhatsApp.
 - Redes destacadas: Instagram de Maricruz, TikTok e Instagram del salón.
 

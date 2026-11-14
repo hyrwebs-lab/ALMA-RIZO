@@ -6,12 +6,14 @@
    profundo + emerald del logo + oliva para overlays translúcidos).
    =========================================================== */
 @theme {
-  /* Brand palette — verde SALVIA elegido por la clienta (#688b5e), opción A */
-  --color-brand: #557a4a; /* salvia profundo (footer, secciones, títulos — legible) */
-  --color-brand-deep: #688b5e; /* salvia principal (portada, CTA — color de la clienta) */
-  --color-brand-soft: #7d9a72; /* salvia claro */
-  --color-olive: #4a4a35; /* verde oliva (overlays translúcidos, efecto transparente) */
-  --color-olive-soft: #5b5f43; /* oliva claro */
+  /* Brand palette — color corporativo definitivo: PANTONE 7720 C (#00635b).
+     Sustituye al salvia #688b5e (nov. 2026). Los nombres «olive» se mantienen
+     por compatibilidad, pero ya son tonos del mismo verde azulado. */
+  --color-brand: #004f49; /* 7720 profundo (footer, secciones, títulos — legible) */
+  --color-brand-deep: #00635b; /* PANTONE 7720 C (portada, CTA) */
+  --color-brand-soft: #2e7f76; /* 7720 claro */
+  --color-olive: #0b3f3a; /* capa translúcida de los overlays (antes oliva) */
+  --color-olive-soft: #1d5a53; /* capa translúcida clara */
   --color-cream: #f3e9db; /* beige principal */
   --color-cream-soft: #faf5ec; /* crema clara (fondos) */
   --color-cream-deep: #e9dcc8; /* beige más cálido */
