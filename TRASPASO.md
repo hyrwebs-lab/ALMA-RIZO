@@ -60,12 +60,15 @@ nadie recibía aviso al entrar una reserva.
 ```bash
 git clone https://github.com/hyrwebs-lab/ALMA-RIZO.git alma-rizo
 cd alma-rizo
+mkdir data
 npm install
 npm run dev
 ```
 
 Con eso ya funciona en local: la base de datos SQLite se crea sola con contenido de
-ejemplo en `data/almarizo.db`. **No hace falta ningún fichero `.env` para trabajar en
+ejemplo en `data/almarizo.db`. **La carpeta `data/` hay que crearla a mano** (no
+viaja en el repositorio): si no existe, todas las páginas dan error 500 con
+`Unable to open connection to local database ./data/almarizo.db: 14`. **No hace falta ningún fichero `.env` para trabajar en
 local** (las credenciales de Turso solo viven en Vercel).
 
 ### Para poder publicar cambios
@@ -78,7 +81,7 @@ local** (las credenciales de Turso solo viven en Vercel).
 ### Lo que NO viaja en el repositorio
 - `media-src/` → vídeos originales en bruto (146 MB). **Solo hacen falta si hay que
   volver a comprimir vídeos.** Los ya optimizados sí están en `public/videos/`.
-- `data/almarizo.db` → base de datos local; se regenera sola.
+- `data/almarizo.db` → base de datos local; se regenera sola (si existe la carpeta `data/`).
 - `.vercel/` → enlace con Vercel; se recrea con `vercel link`.
 
 ### Contraseñas
